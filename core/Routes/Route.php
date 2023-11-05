@@ -5,6 +5,7 @@ namespace Core\Routes;
 use Core\Http\Request;
 use Core\Http\RequestFactory;
 use App\Controllers\NotFoundConreoller;
+use Core\Routes\Exceptions\SubrouteNotExistsException;
 
 class Route
 {
@@ -18,6 +19,11 @@ class Route
     ];
     private $dinamic;
     private $labels = [];
+    private FilterChain $filterChain;
+    public function __construct()
+    {
+        $this->filterChain = new FilterChain();
+    }
     public static function explodeURI($path)
     {
         $splitedPath = explode('/', $path);
@@ -53,6 +59,29 @@ class Route
     public function put($path, $data)
     {
         $this->addDinamicRoute($path, $data, 'PUT');
+    }
+    public function use(Filter $filter, array | string $path = '/')
+    {
+        if (gettype($path) == 'string') {
+            $splitedPath = $path === '/' ? [] : self::explodeURI($path);
+            $this->use($filter, $splitedPath);
+        } elseif (isset($path[0])) {
+            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+                if (!isset($this->dinamic)) {
+                    throw new SubrouteNotExistsException();
+                }
+                array_shift($path);
+                $this->dinamic->use($filter, $path);
+            } elseif (isset($path[0]) & isset($this->subRoutes[$path[0]])) {
+                $subRouteName = $path[0];
+                array_shift($path);
+                $this->subRoutes[$subRouteName]->use($filter, $path);
+            } else {
+                throw new SubrouteNotExistsException();
+            }
+        } else {
+            $this->filterChain->addFilter($filter);
+        }
     }
     public function addDinamicRoute($path, $data, $method = 'GET')
     {
