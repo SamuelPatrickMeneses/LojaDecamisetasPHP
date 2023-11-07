@@ -1,14 +1,20 @@
 <?php
 
-namespace App\Controllers;
+namespace Core\Controllers;
 
 use App\Lib\Flash;
+use Core\Http\Request;
 
-class BaseController
+abstract class  BaseController
 {
     protected $layout = 'application';
     protected $params = [];
-
+    protected $request;
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+        $this->setParams($request->getParams());
+    }
     public function render($view, $data = [])
     {
         extract($data);

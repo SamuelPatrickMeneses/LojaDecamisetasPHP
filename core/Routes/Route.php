@@ -130,31 +130,29 @@ class Route
                 }
                 $this->dinamic->action($request, $path);
             } else {
-                $this->runErrorController('not_found', $request->getParams());
+                $this->runErrorController('not_found', $request);
             }
         } else {
             $method = $request->getMethod();
             if ($this->controllers[$method]) {
-                $this->runController($method, $request->getParams());
+                $this->runController($method, $request);
             } else {
-                $this->runErrorController('not_found', $request->getParams());
+                $this->runErrorController('not_found', $request);
             }
         }
     }
-    private function runController($method, $params = null)
+    private function runController($method, Request $request)
     {
         $class  = $this->controllers[$method]['class'];
         $action = $this->controllers[$method]['action'];
-        $controller = new $class();
-        $controller->setParams($params);
+        $controller = new $class($request);
         $controller->$action();
     }
-    private function runErrorController($name, $params = null)
+    private function runErrorController($name, Request $request)
     {
         $class  = $this->errorControllers[$name]['class'];
         $action = $this->errorControllers[$name]['action'];
-        $controller = new $class();
-        $controller->setParams($params);
+        $controller = new $class($request);
         $controller->$action();
     }
 }
