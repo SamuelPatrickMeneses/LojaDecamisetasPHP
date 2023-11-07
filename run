@@ -10,7 +10,6 @@ function ps {
 }
 
 function up {
-    echo $USER
     docker compose up "${@}"
 }
 
