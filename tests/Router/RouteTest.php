@@ -6,8 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Core\Routes\Route;
 use Core\Http\Request;
 
-include 'MockController.php';
-
 class RouteTest extends TestCase
 {
     private Route $route;

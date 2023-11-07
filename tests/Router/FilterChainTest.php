@@ -8,8 +8,6 @@ use Core\Http\Request;
 use Core\Routes\Exceptions\SubrouteNotExistsException;
 use PHPUnit\Framework\Assert;
 
-include_once 'MockFilter.php';
-
 class FilterChainTest extends TestCase
 {
     private Route $route;
