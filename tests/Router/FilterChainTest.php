@@ -45,6 +45,14 @@ class FilterChainTest extends TestCase
             $this->assertTrue(true);
         }
     }
+    public function testFilterInstanciedByClassPath()
+    {
+        $requet = self::createRequest('/', 'GET');
+        $this->route->get('/', [MockController::class, 'itMustBeCalled']);
+        $this->route->post('/', [MockController::class, 'itDontMustBeCalled']);
+        $this->route->use(Tests\Router\MockFilter::class);
+        $this->route->action($requet);
+    }
     private static function createRequest($path, $method): Request
     {
         $requet = new Request();
