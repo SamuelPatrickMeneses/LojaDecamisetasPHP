@@ -24,7 +24,9 @@ class FilterChain
             if (count($filterChain->filters) == 0) {
                 return;
             }
-            $filterChain->filters[0]->doFilter($request, $filterChain);
+            $filter = $filterChain->filters[0];
+            $filter = gettype($filter) == 'string' ? new $filter() : $filter;
+            $filter->doFilter($request, $filterChain);
         });
     }
     public function resume($arg){
@@ -36,12 +38,14 @@ class FilterChain
         $count = $this->count + 1;
         if (isset($this->filters[$count])) {
             $this->count = $count;
-            $this->filters[$count]->doFilter($request, $this);
+            $filter = $this->filters[$count];
+            $filter = gettype($filter) == 'string' ? new $filter() : $filter;
+            $filter->doFilter($request, $this);
         } else {
             Fiber::suspend(self::OK);
         }
     }
-    public function addFilter(Filter $filter)
+    public function addFilter(Filter | string $filter)
     {
         $this->filters[] = $filter;
     }

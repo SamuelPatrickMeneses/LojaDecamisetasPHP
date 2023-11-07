@@ -60,7 +60,7 @@ class Route
     {
         $this->addDinamicRoute($path, $data, 'PUT');
     }
-    public function use(Filter $filter, array | string $path = '/')
+    public function use(Filter | string $filter, array | string $path = '/')
     {
         if (gettype($path) == 'string') {
             $splitedPath = $path === '/' ? [] : self::explodeURI($path);
