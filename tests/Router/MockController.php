@@ -2,7 +2,7 @@
 
 namespace Tests\Router;
 
-use App\Controllers\BaseController;
+use Core\Controllers\BaseController;
 use PHPUnit\Framework\Assert;
 
 class MockController extends BaseController
@@ -14,5 +14,8 @@ class MockController extends BaseController
     public function itDontMustBeCalled()
     {
         Assert::assertTrue(false);
+    }
+    public function nop()
+    {
     }
 }
