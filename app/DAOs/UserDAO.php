@@ -3,7 +3,7 @@
 namespace App\DAOs;
 
 use App\Entity\User;
-use App\Exceptions\UserNotExistis;
+use App\Exceptions\UserNotExistisException;
 use Core\DB\DBConnectionHolder;
 use PDO;
 use PDOException;
@@ -29,7 +29,7 @@ class UserDAO
         if(isset($result[0])){
             return new User($result[0]);
         }
-        throw new UserNotExistis();
+        throw new UserNotExistisException();
     }
     public function insertUser(User $user)
     {
