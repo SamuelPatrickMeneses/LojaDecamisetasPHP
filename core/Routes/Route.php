@@ -93,35 +93,26 @@ class Route
         if (count($splitedPath) === 0) {
             $this->controllers[$method]['class'] = $data[0];
             $this->controllers[$method]['action'] = $data[1];
-            return;
-        }
-        if (preg_match('/^:[a-z,_]+$/', $splitedPath[0])) {
-            if (!isset($this->dinamic)) {
-                $this->dinamic = new Route();
-            }
+        } elseif (preg_match('/^:[a-z,_]+$/', $splitedPath[0])) {
+            $this->dinamic = $this->dinamic ?? new Route();
             $this->dinamic->errorControllers = $this->errorControllers;
-            $this->labels[] = $splitedPath[0];
-            array_shift($splitedPath);
+            $this->labels[] = array_shift($splitedPath);
             $this->dinamic->addNode($splitedPath, $data, $method);
             return;
+        } else {
+            $subRoute = array_shift($splitedPath);
+            if (!isset($this->subRoutes[$subRoute])) {
+                $this->subRoutes[$subRoute] = new Route();
+            }
+            $this->subRoutes[$subRoute]->
+            errorControllers = $this->errorControllers;
+            $this->subRoutes[$subRoute]->addNode($splitedPath, $data, $method);
         }
-        $subRoute = $splitedPath[0];
-        if (!isset($this->subRoutes[$subRoute])) {
-            $this->subRoutes[$subRoute] = new Route();
-        }
-        $this->subRoutes[$subRoute]->
-        errorControllers = $this->errorControllers;
-        array_shift($splitedPath);
-        $this->subRoutes[$subRoute]->addNode($splitedPath, $data, $method);
     }
-    public function action(Request $request, $path = null)
+    private function drive(Request $request, $path)
     {
-        if ($path === null) {
-            $path = self::explodeURI($request->getPath());
-        }
         if (count($path) > 0) {
-            $subRoute = $path[0];
-            array_shift($path);
+            $subRoute = array_shift($path);
             if (isset($this->subRoutes[$subRoute])) {
                 $this->subRoutes[$subRoute]->action($request, $path);
             } elseif (isset($this->dinamic)) {
@@ -140,6 +131,15 @@ class Route
                 $this->runErrorController('not_found', $request);
             }
         }
+    }
+    public function action(Request $request, $path = null)
+    {
+        if ($path === null) {
+            $path = self::explodeURI($request->getPath());
+        }
+        $this->filterChain->start($request);
+        $this->drive($request, $path);
+        $this->filterChain->resume($request);
     }
     private function runController($method, Request $request)
     {
