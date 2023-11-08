@@ -17,10 +17,10 @@ class FilterChain
         $this->count = 0;
     }
 
-    public function stat(Request $request){
+    public function start(Request $request)
+    {
         $filterChain = $this;
-        $this->fiber = new Fiber(function () use($filterChain, $request)
-        {
+        $this->fiber = new Fiber(function () use ($filterChain, $request) {
             if (count($filterChain->filters) == 0) {
                 return;
             }
@@ -28,13 +28,16 @@ class FilterChain
             $filter = gettype($filter) == 'string' ? new $filter() : $filter;
             $filter->doFilter($request, $filterChain);
         });
+        $this->fiber->start();
     }
-    public function resume($arg){
+    public function resume($arg)
+    {
         if ($this->fiber->isRunning()) {
             $this->fiber->resume($arg);
         }
     }
-    public function next(Request $request){
+    public function next(Request $request)
+    {
         $count = $this->count + 1;
         if (isset($this->filters[$count])) {
             $this->count = $count;
@@ -49,5 +52,4 @@ class FilterChain
     {
         $this->filters[] = $filter;
     }
-
 }
