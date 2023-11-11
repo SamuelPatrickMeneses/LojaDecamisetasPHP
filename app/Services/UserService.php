@@ -45,4 +45,8 @@ class UserService
         $user->setName($name);
         return $this->dao->insertUser($user);
     }
+    public function logout(){
+        unset($_SESSION['user']);
+        $_SESSION['loged'] = false;
+    }
 }
