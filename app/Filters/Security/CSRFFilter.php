@@ -11,7 +11,7 @@ use Core\Routes\FilterChain;
 class CSRFFilter implements Filter
 {
     public function doFilter(Request $requst, FilterChain $filterChain)
-    {       
+    {
         $itMustInterupt = $requst->getMethod() == 'POST'
         && !CSRF::validateToken($requst->getParams()['csrf_token']);
         if ($itMustInterupt) {

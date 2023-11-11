@@ -5,7 +5,7 @@ namespace Core\Controllers;
 use App\Lib\Flash;
 use Core\Http\Request;
 
-abstract class  BaseController
+abstract class BaseController
 {
     protected $layout = 'application';
     protected $params = [];

@@ -20,12 +20,11 @@ class SigningUpController extends BaseController
     }
     public function validateInputs($email, $password, $password2, $name)
     {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) == $email 
+        return filter_var($email, FILTER_VALIDATE_EMAIL) == $email
         && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password)
-        && preg_match('/^[a-zA-Z0-9]{5,100}$/',$name)
+        && preg_match('/^[a-zA-Z0-9]{5,100}$/', $name)
         && $password == $password2
         && strlen($email) <= 50;
-        
     }
     public function post()
     {

@@ -21,12 +21,12 @@ class UserDAO
     public function findUserByEmail($email)
     {
         $statemant = $this->pdo->prepare('select * from users where email = :email');
-        $statemant->bindParam(':email',$email);
+        $statemant->bindParam(':email', $email);
 
         $statemant->execute();
         $result = $statemant->fetchAll(PDO::FETCH_ASSOC);
 
-        if(isset($result[0])){
+        if (isset($result[0])) {
             return new User($result[0]);
         }
         throw new UserNotExistisException();
@@ -39,7 +39,7 @@ class UserDAO
         $statement->bindValue(':user_name', $user->getName());
         $statement->bindValue(':user_password', $user->getPassword());
         $statement->bindValue(':email', $user->getEmail());
-        
+
         try {
             $statement->execute();
             return true;
@@ -59,5 +59,4 @@ class UserDAO
             return false;
         }
     }
-    
 }

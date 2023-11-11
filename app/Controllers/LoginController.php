@@ -20,9 +20,8 @@ class LoginController extends BaseController
     }
     public function validateInputs($email, $password)
     {
-        return filter_var($email, FILTER_VALIDATE_EMAIL, ['options' => ['max_range' => 50]]) == $email 
+        return filter_var($email, FILTER_VALIDATE_EMAIL, ['options' => ['max_range' => 50]]) == $email
         && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password);
-        
     }
     public function post()
     {

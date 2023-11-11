@@ -14,17 +14,17 @@ class User
 
     public function __construct(array $registry = [])
     {
-        if(count($registry) > 0 ) {
+        if (count($registry) > 0) {
             $this->setId($registry['user_id']);
             $this->setName($registry['user_name']);
             $this->setPassword($registry['user_password']);
             $this->setEmail($registry['email']);
             $this->setPhone($registry['phone']);
             $this->setNotfy($registry['notfy']);
-            $this->setLastLogin($registry['last_login']);   
+            $this->setLastLogin($registry['last_login']);
         }
     }
-    
+
     public function getId()
     {
         return $this->id;
