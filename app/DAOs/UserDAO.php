@@ -33,15 +33,25 @@ class UserDAO
     }
     public function insertUser(User $user)
     {
-        $comand = 'insert into users (user_name, user_password, email, phone, notfy) values (:user_name, :user_password, :email, :phone, :notfy)';
+        $comand = 'insert into users (user_name, user_password, email) values (:user_name, :user_password, :email)';
         $statement = $this->pdo->prepare($comand);
 
         $statement->bindValue(':user_name', $user->getName());
         $statement->bindValue(':user_password', $user->getPassword());
         $statement->bindValue(':email', $user->getEmail());
-        $statement->bindValue(':phone', $user->getPhone());
-        $statement->bindValue(':notfy', $user->getNotfy());
         
+        try {
+            $statement->execute();
+            return true;
+        } catch (PDOException $ex) {
+            return false;
+        }
+    }
+    public function updateLastLogin($userId)
+    {
+        $comand = 'update users set last_login = now() where user_id = :id';
+        $statement = $this->pdo->prepare($comand);
+        $statement->bindValue(':id', $userId);
         try {
             $statement->execute();
             return true;
