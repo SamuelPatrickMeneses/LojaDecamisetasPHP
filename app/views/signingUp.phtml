@@ -1,0 +1,17 @@
+<?php if (isset($flash['error_message'])):?>
+    <p>
+        <?=$flash['error_message']?>
+    </p>
+<?php endif;?>
+<form action="/signingup" method="post">
+    <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+    <label for="email"></label>
+    <input type="email" name="email" value="<?=$email ?? ''?>"/>
+    <label for="name"></label>
+    <input type="text" name="name" id="" value="<?=$name ?? ''?>">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" value="<?=$password ?? ''?>">
+    <label for="password2">Repiate Password</label>
+    <input type="password" name="password2" id="password2"  value="<?=$password2 ?? ''?>">
+    <input type="submit" value="login">
+</form>
