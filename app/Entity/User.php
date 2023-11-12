@@ -55,11 +55,11 @@ class User
     }
     public function setId($id)
     {
-        return $this->id = $id;
+        $this->id = $id;
     }
     public function setName($name)
     {
-        return $this->name = $name;
+        $this->name = $name;
     }
     public function setPassword($password)
     {
@@ -67,18 +67,18 @@ class User
     }
     public function setEmail($email)
     {
-        return $this->email = $email;
+        $this->email = $email;
     }
     public function setPhone($phone)
     {
-        return $this->phone = $phone;
+        $this->phone = $phone;
     }
     public function setNotfy($notfy)
     {
-        return $this->notfy = $notfy;
+        $this->notfy = $notfy;
     }
     public function setLastLogin($lastLogin)
     {
-        return $this->lastLogin = $lastLogin;
+        $this->lastLogin = $lastLogin;
     }
 }
