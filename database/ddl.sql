@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS  users (
     email VARCHAR(50) NOT NULL COLLATE utf8_bin,
     phone VARCHAR(32),
     notfy TINYINT(1) DEFAULT 0,
-    last_login TIMESTAMP DEFAULT NOW(),
+    last_login DATETIME,
+    gmt_ofset TINYINT(2) DEFAULT 0,
     PRIMARY KEY (user_id),
     UNIQUE INDEX users_email_index (email),
     INDEX user_name_index (user_name)
