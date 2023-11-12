@@ -11,6 +11,7 @@ class User
     private $phone;
     private $notfy;
     private $lastLogin;
+    private $gmtOfset;
 
     public function __construct(array $registry = [])
     {
@@ -22,12 +23,17 @@ class User
             $this->setPhone($registry['phone']);
             $this->setNotfy($registry['notfy']);
             $this->setLastLogin($registry['last_login']);
+            $this->setGmtOfset($registry['gmt_ofset']);
         }
     }
 
     public function getId()
     {
         return $this->id;
+    }
+    public function getGmtOfset()
+    {
+        return $this->gmtOfset;
     }
     public function getName()
     {
@@ -80,5 +86,9 @@ class User
     public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
+    }
+    public function setGmtOfset($gmtOfset)
+    {
+        $this->gmtOfset = $gmtOfset;
     }
 }
