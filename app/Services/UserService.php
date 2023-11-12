@@ -14,7 +14,7 @@ class UserService
         $this->dao = new UserDAO();
     }
 
-    public function authenticate($email, $password)
+    public function authenticate($email, $password, $gmtOfset)
     {
         try {
             $user =  $this->dao->findUserByEmail($email);
@@ -25,7 +25,7 @@ class UserService
                 $_SESSION['user']['phone'] = $user->getPhone();
                 $_SESSION['user']['email'] = $user->getEmail();
                 $_SESSION['loged'] = true;
-                $this->dao->updateLastLogin($user->getId());
+                $this->dao->updateLastLogin($user->getId(), $gmtOfset);
                 return true;
             } else {
                 return false;

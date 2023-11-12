@@ -10,6 +10,7 @@
 <?php endif;?>
 <form action="/login" method="post">
     <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+    <input type="hidden" name="timezoneOfset" class="timezoneOfset">
     <label for="email"></label>
     <input type="email" name="email"/>
     <label for="password"></label>

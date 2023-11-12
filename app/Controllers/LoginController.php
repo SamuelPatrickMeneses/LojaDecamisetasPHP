@@ -18,18 +18,20 @@ class LoginController extends BaseController
         parent::__construct($request);
         $this->service = new UserService();
     }
-    public function validateInputs($email, $password)
+    public function validateInputs($email, $password, $gmtOfset)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL, ['options' => ['max_range' => 50]]) == $email
-        && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password);
+        && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password)
+        && $gmtOfset < 13 && $gmtOfset > -13;
     }
     public function post()
     {
         $authenticate = false;
         $email = $this->params['email'];
         $password = $this->params['password'];
-        if ($this->validateInputs($email, $password)) {
-            $authenticate = $this->service->authenticate($email, $password);
+        $gmtOfset = intval($this->params['timezoneOfset']) ?? 0;
+        if ($this->validateInputs($email, $password, $gmtOfset)) {
+            $authenticate = $this->service->authenticate($email, $password, $gmtOfset);
             if ($authenticate) {
                 $this->redirectTo('/home');
             } else {

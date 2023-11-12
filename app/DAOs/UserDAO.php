@@ -47,11 +47,14 @@ class UserDAO
             return false;
         }
     }
-    public function updateLastLogin($userId)
-    {
-        $comand = 'update users set last_login = now() where user_id = :id';
+    public function updateLastLogin($userId, $gmtOfset)
+    {   
+        $timestamp = gmdate('Y-m-d H:i:s');
+        $comand = 'update users set last_login = :last_login, gmt_ofset = :gmt_ofset where user_id = :id';
         $statement = $this->pdo->prepare($comand);
         $statement->bindValue(':id', $userId);
+        $statement->bindValue(':last_login', $timestamp);
+        $statement->bindValue(':gmt_ofset', $gmtOfset);
         try {
             $statement->execute();
             return true;
