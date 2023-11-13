@@ -11,3 +11,11 @@ CREATE TABLE IF NOT EXISTS  users (
     UNIQUE INDEX users_email_index (email),
     INDEX user_name_index (user_name)
 )CHARACTER SET=utf8;
+
+CREATE TABLE IF NOT EXISTS admins(
+  admin_id INT(11) NOT NULL AUTO_INCREMENT,
+  admin_name VARCHAR(100) NOT NULL,
+  admin_password VARCHAR(250) NOT NULL,
+  PRIMARY KEY (admin_id)
+) CHARACTER SET=utf8;
+
