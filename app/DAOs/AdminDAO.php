@@ -28,7 +28,7 @@ class AdminDAO
         $result = $statemant->fetchAll(PDO::FETCH_ASSOC);
 
         if (isset($result[0])) {
-            return new User($result[0]);
+            return new Admin($result[0]);
         }
         throw new UserNotExistisException();
     }
