@@ -1,0 +1,18 @@
+<?php if (isset($flash['error_message'])):?>
+    <p>
+        <?=$flash['error_message']?>
+    </p>
+<?php endif;?>
+<?php if (isset($flash['success_message'])):?>
+    <p>
+        <?=$flash['success_message']?>
+    </p>
+<?php endif;?>
+<form action="/admin/login" method="post">
+    <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+    <label for="name"></label>
+    <input type="text" name="name"/>
+    <label for="password"></label>
+    <input type="password" name="password">
+    <input type="submit" value="login">
+</form>
