@@ -35,6 +35,13 @@ the database root password, used by db container.
 ##### MYSQL_ROOT_USER
 the database root user, used by db container.
 
+##### DATASET
+according to the value select a data set in the database folder, used by database/generateUserAndDB.
+values:
+-   development = database/dev.sql
+-   test = database/test.sql
+
+in case of anofer value, it try use the value as the dataset file path. 
 ### Run
 
 ```
