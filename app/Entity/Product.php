@@ -10,6 +10,7 @@ class Product
     private $price;
     private $variants;
     private $images;
+    private $status;
 
     public function __construct(array $registry = [])
     {
@@ -18,10 +19,12 @@ class Product
             $this->setTitle($registry['product_title']);
             $this->setDescription($registry['product_description']);
             $this->setPrice($registry['product_price']);
+            $this->setStatus($registry['product_status']);
             $this->variants = null;
             $this->images = null;
         }
     }
+    
     public function getId()
     {
         return $this->id;
@@ -79,6 +82,16 @@ class Product
     public function setImages($images): self
     {
         $this->images = $images;
+
+        return $this;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function setStatus($status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

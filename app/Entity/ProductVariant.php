@@ -10,6 +10,7 @@ class ProductVariant
     private $grid;
     private $images;
     private $stockQantity;
+    private $status;
 
     public function __construct(array $registry = [])
     {
@@ -19,10 +20,12 @@ class ProductVariant
             $this->setPrice($registry['variant_price']);
             $this->setGrid($registry['grid_id']);
             $this->setStockQantity($registry['stock_quantity']);
+            $this->setStatus($registry['variant_status']);
             $this->images = null;
         }
     }
     
+
     public function getId()
     {
         return $this->id;
@@ -80,6 +83,16 @@ class ProductVariant
     public function setStockQantity($stockQantity): self
     {
         $this->stockQantity = $stockQantity;
+
+        return $this;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function setStatus($status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

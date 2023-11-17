@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS products (
   product_title VARCHAR(500) NOT NULL,
   product_description VARCHAR(1000) NOT NULL,
   product_price INT(6) NOT NULL,
+  product_status TINYINT NOT NULL,
   PRIMARY KEY (product_id),
   FULLTEXT (product_title)
 ) CHARACTER SET=utf8;
@@ -43,6 +44,7 @@ CREATE TABLE IF NOT EXISTS product_variants (
   product_id INT(11) NOT NULL,
   price INT(6) NOT NULL,
   stock_quantity INT(8) NOT NULL DEFAULT 0,
+  variant_status TINYINT NOT NULL,
   PRIMARY KEY (variant_id),
   FOREIGN KEY (product_id) REFERENCES products(product_id)
 ) CHARACTER SET=utf8;
