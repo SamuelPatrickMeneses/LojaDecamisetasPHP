@@ -17,7 +17,7 @@ class ProductVariant
         if (count($registry) > 0) {
             $this->setId($registry['variant_id']);
             $this->setProduct($registry['product_id']);
-            $this->setPrice($registry['variant_price']);
+            $this->setPrice($registry['price']);
             $this->setGrid($registry['grid_id']);
             $this->setStockQantity($registry['stock_quantity']);
             $this->setStatus($registry['variant_status']);
