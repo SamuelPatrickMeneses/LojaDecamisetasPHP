@@ -11,7 +11,7 @@ class Request
     private $path;
     private $hostName;
     private $params;
-    public const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+    public const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
     public function getQerryStrings()
     {
         return $this->queryStrings;
