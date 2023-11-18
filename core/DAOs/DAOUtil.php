@@ -21,6 +21,6 @@ class DAOUtil
     }
     public static function buildPagination($size = 0, $number = 1)
     {
-        return $size === 0 ? '' : "LIMIT $size OFSET " . ($number - 1) * $size;
+        return $size === 0 ? '' : "LIMIT $size OFFSET " . ($number - 1) * $size;
     }
 }
