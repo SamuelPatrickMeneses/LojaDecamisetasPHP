@@ -15,7 +15,8 @@ class Route
         'GET' => [],
         'POST' => [],
         'PUT' => [],
-        'DELETE' => []
+        'DELETE' => [],
+        'PATCH' => [],
     ];
     private $dinamic;
     private $labels = [];
@@ -59,6 +60,10 @@ class Route
     public function put($path, $data)
     {
         $this->addDinamicRoute($path, $data, 'PUT');
+    }
+    public function patch($path, $data)
+    {
+        $this->addDinamicRoute($path, $data, 'PATCH');
     }
     public function use(Filter | string $filter, array | string $path = '/')
     {
