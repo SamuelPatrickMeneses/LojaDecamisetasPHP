@@ -88,6 +88,43 @@ class Route
             $this->filterChain->addFilter($filter);
         }
     }
+    public function setSubRoute(Route $subRoute,  array | string $path = '/')
+    {
+        if (is_string($path)) {
+            $path = $path === '/' ? [] : self::explodeURI($path);
+        }
+        if (count($path) == 0) {
+            $this->subRoutes += $subRoute->subRoutes;
+            $this->controllers += $subRoute->controllers;
+            $this->errorControllers += $subRoute->errorControllers;
+            $this->dinamic += $subRoute->dinamic ?? $this->dinamic;
+            $this->labels += $subRoute->labels;
+        } elseif (count($path) == 1) {
+            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+                $this->labels[] = $path[0];
+                $this->dinamic = $subRoute;
+            } else {
+                $this->subRoutes[$path[0]] = $subRoute;
+            }
+        } else {
+            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+                if (!isset($this->dinamic)) {
+                    $this->dinamic = new Route();
+                    $this->dinamic->errorControllers = $this->errorControllers;
+                }
+                array_shift($path);
+                $this->dinamic->setSubRoute($subRoute, $path);
+            } else {
+                $subRouteName = $path[0];
+                array_shift($path);
+                if (!isset($this->subRoutes[$subRouteName])) {
+                    $this->subRoutes[$subRouteName] = new Route();
+                    $this->subRoutes[$subRouteName]->errorControllers = $this->errorControllers;
+                }
+                $this->subRoutes[$subRouteName]->setSubRoute($subRoute, $path);
+            }
+        }
+    }
     public function addDinamicRoute($path, $data, $method = 'GET')
     {
         $splitedPath = $path === '/' ? [] : self::explodeURI($path);
