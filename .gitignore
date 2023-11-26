@@ -479,3 +479,4 @@ composer.lock
 ##### temp files
 /database/clean.sql
 /database/schema.sql
+public/uploads/
