@@ -9,11 +9,13 @@ class Grid
     private $color;
     private $gender;
     private $productVariants;
+    public const ACEPTED_SIZES = ['PPP', 'PP', 'P', 'M', 'G', '2G', '3G', '4G'];
+    public const ACEPTED_GENDERS = ['M', 'F'];
 
     public function __construct(array $registry = [])
     {
         if (count($registry) > 0) {
-            $this->setId($registry['product_id']);
+            $this->setId($registry['grid_id']);
             $this->setColor($registry['grid_color']);
             $this->setSize($registry['grid_size']);
             $this->setGender($registry['grid_gender']);
@@ -70,5 +72,9 @@ class Grid
         $this->productVariants = $productVariants;
 
         return $this;
+    }
+    public function getLabel()
+    {
+        return "$this->size/$this->color/$this->gender";
     }
 }

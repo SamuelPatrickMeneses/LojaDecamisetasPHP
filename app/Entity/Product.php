@@ -20,8 +20,12 @@ class Product
             $this->setDescription($registry['product_description']);
             $this->setPrice($registry['product_price']);
             $this->setStatus($registry['product_status']);
+            if (isset($registry['image_file'])) {
+                $this->images = [$registry['image_file']];
+            } else {
+                $this->images = null;
+            }
             $this->variants = null;
-            $this->images = null;
         }
     }
     

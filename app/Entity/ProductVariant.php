@@ -18,7 +18,7 @@ class ProductVariant
             $this->setId($registry['variant_id']);
             $this->setProduct($registry['product_id']);
             $this->setPrice($registry['price']);
-            $this->setGrid($registry['grid_id']);
+            $this->setGrid($registry['grid_label'] ?? $registry['grid_id']);
             $this->setStockQantity($registry['stock_quantity']);
             $this->setStatus($registry['variant_status']);
             $this->images = null;
