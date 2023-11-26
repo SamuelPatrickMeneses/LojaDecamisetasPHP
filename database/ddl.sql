@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS  users (
     notfy TINYINT(1) DEFAULT 0,
     last_login DATETIME,
     gmt_ofset TINYINT(2) DEFAULT 0,
+    tax_id VARCHAR(11) DEFAULT '',
     PRIMARY KEY (user_id),
     UNIQUE INDEX users_email_index (email),
     INDEX user_name_index (user_name)
