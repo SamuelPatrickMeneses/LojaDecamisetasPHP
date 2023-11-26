@@ -18,10 +18,10 @@ abstract class BaseController
     public function render($view, $data = [])
     {
         extract($data);
-        $_SESSION['lest_page'] = $this->request->getPath();
         $flash = Flash::message();
         $view = ROOT_PATH . '/app/views/' . $view .  '.phtml';
         require ROOT_PATH . '/app/views/layouts/' . $this->layout .  '.phtml';
+        $_SESSION['lest_page'] = $this->request->getPath();
     }
 
     public function setParams(array $params)
