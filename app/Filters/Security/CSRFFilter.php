@@ -12,7 +12,7 @@ class CSRFFilter implements Filter
 {
     public function doFilter(Request $requst, FilterChain $filterChain)
     {
-        $itMustInterupt = $requst->getMethod() == 'POST'
+        $itMustInterupt = $requst->getMethod() !== 'GET'
         && !CSRF::validateToken($requst->getParams()['csrf_token']);
         if ($itMustInterupt) {
             Flash::message('error_message', "csrf fail detected try again.");
