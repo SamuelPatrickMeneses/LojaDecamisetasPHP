@@ -1,19 +1,20 @@
-<?php if (isset($flash['error_message'])):?>
-    <p>
-        <?=$flash['error_message']?>
-    </p>
-<?php endif;?>
-<?php if (isset($flash['success_message'])):?>
-    <p>
-        <?=$flash['success_message']?>
-    </p>
-<?php endif;?>
-<form action="/login" method="post">
-    <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
-    <input type="hidden" name="timezoneOfset" class="timezoneOfset">
-    <label for="email"></label>
-    <input type="email" name="email"/>
-    <label for="password"></label>
-    <input type="password" name="password">
-    <input type="submit" value="login">
-</form>
+<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
+<div class="container">
+    <div class="card container ">
+        <form action="/login" method="post">
+            <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+            <input type="hidden" name="timezoneOfset" class="timezoneOfset">
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="temail" name="email" id="email" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="login" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+</div>
