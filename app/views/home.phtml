@@ -1,0 +1,39 @@
+<section class="container">
+    <div class="">
+        <?php foreach ($products as $product):?>
+            <div class="card col-gl-3 col-md-4 col-sm-6 col-12">
+                <a href="/product/<?= $product->getId()?>">
+                    <img src="<?= $product->getImages()[0]?>" alt="<?= $product->getTitle()?>" class="card-img-top">
+                </a>
+                <div class="card-body">
+                    <a href="/product/<?= $product->getId()?>">
+                        <div class="card-title">
+                            <?= $product->getTitle()?>
+                        </div>
+                    </a>
+                    <div class="card-text">
+                        R$ <?= number_format($product->getPrice() / 100.0,2)?>
+                    </div>
+                </div>
+            </div>
+        <?endforeach;?>
+    </div>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item <?= $curentPage == 1 ? 'disabled' : ''?>">
+                <a class="page-link" href="/home/<?= $curentPage == 1 ? 1 : $curentPage - 1?>">Previusly</a>
+            </li>
+                <?php 
+                    $min =  $curentPage > 2 ? $curentPage - 2 : 1;
+                    $max = ($pageTotal - $curentPage) >= 2 ? $curentPage + 2 : $pageTotal;
+                    for ($i = $min; $i <= $max ; $i++) {
+                        echo '<li class="page-item ' . ($curentPage == $i ? 'active' : '') . '">' .
+                        '<a class="page-link" href="/home/?ps=12&pn=' . $i . '">' . $i . '</a></li>';
+                    }
+                ?>
+            <li class="page-item">
+                <a class="page-link" href="/home/<?= $curentPage == $pageTotal ? $pageTotal : $curentPage + 1?>">Nex</a>
+            </li>
+        </ul>
+    </nav>
+</section>
