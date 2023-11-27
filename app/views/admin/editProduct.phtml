@@ -1,0 +1,62 @@
+<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
+<div class="container">
+  <form action="/admin/products/edit/<?= $product->getId()?>" method="post">
+      <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+      <input type='hidden' name="_method" value='PATCH'>
+      <div class="row">
+        <div  class="form-group col-gl col-12">
+          <label for="title"></label>
+          <input type="text" name="title" value="<?= $product->getTitle()?>" class="form-control"/>
+        </div>
+        <div class="form-group col-gl col-12">
+          <label for="description"></label>
+          <input type="text" name="description" value="<?= $product->getDescription() ?? ''?>"  class="form-control"/>
+        </div>
+        <div class="form-group col-gl col-12">
+          <label for="price"></label>
+          <input type="number" name="price" min="0.00" max="10000.00" step="0.01" value="<?= $product->getPrice() / 100?>"  class="form-control"/>
+        </div>
+      </div>
+      <div class="form-group row container justify-content-center">
+        <input type="submit" value="edit" class="btm btn-primary col-md-4 col-12">
+      </div>
+
+  </form>
+  <div class="container row offset-md-10">
+    <a href="/admin/productVariants/?productId=<?= $product->getId()?>" class="btn btn-primary col-md-2 col-12">
+      new Variant
+    </a>
+  </div>
+  <div class="mt-4">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col">Size</th>
+          <th scope="col">Color</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php 
+            
+            $productVariants = $product->getVariants();
+            foreach ($productVariants as $productVariant):
+              $grid = explode('/', $productVariant->getGrid());
+        ?>
+            <tr>
+              <td scope="row"><?=$productVariant->getId()?></td>
+              <td><?=$productVariant->getStockQantity()?></td>
+              <td><?='R$ ' . number_format($productVariant->getPrice() / 100.0,2)?></td>
+              <td><?= $grid[0]?></td>
+              <td><?= $grid[1]?></td>
+              <td><?= $grid[2]?></td>
+              <td><a href="/admin/productVariants/<?= $productVariant->getId()?>" class="btn">edit</a></td>
+            </tr>
+        <?endforeach;?>
+    </table>
+  </div>
+</div>

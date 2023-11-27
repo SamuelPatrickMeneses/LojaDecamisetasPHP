@@ -1,0 +1,58 @@
+<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
+<div class="container">
+    <form action="/admin/productVariants/" method="post">
+        <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+        <input type="hidden" name="productId" value="<?= $productId?>">
+            <div class="form-row">
+                <div class="col-md-6 col-12">
+                    <label for="quantity" class="col-12">Quantity</label>
+                    <input type="number" name="quantity" class="form-control"/>           
+                </div>
+                <div class="col-md-6 col-12">            
+                    <label for="price" class="col-12">Price</label>
+                    <input type="number" class="col-12 form-control" name="price" min="0.00" max="10000.00" step="0.01"/>
+                </div>
+            </div>
+            <div class="form-row mb-4">
+                <div class="col-xl-4 col-md-6 col-12">
+                    <label for="size">Size</label>
+                    <select class="form-control " name="size">
+                        <option selected>Size</option>
+                        <option value="PPP">PPP</option>
+                        <option value="PP">PP</option>
+                        <option value="P">P</option>
+                        <option value="M">M</option>
+                        <option value="G">G</option>
+                        <option value="2G">2G</option>
+                        <option value="3G">3G</option>
+                        <option value="4G">4G</option>
+                    </select>
+                </div>
+                <div class="col-xl-4 col-md-6 col-12">
+                    <label for="gender">Gender</label>
+                    <select class="form-control " name="gender">
+                        <option selected>Gender</option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                 <div class="col-xl-4 col-12">
+                    <label for="colors">Color</label>
+                    <select class="form-control" name="color">
+                        <option selected>Color</option>
+                        <?php foreach ($colors as $color) {
+                            echo "<option value=\"$color\">$color</option>";
+                        }?>
+                    </select>
+                </div>
+                <div class="col-12 form-gourp">
+                    <label for="image" class="">Image</label>
+                    <input type="file" name="image" id="image" class="form-control">
+                </div>
+            </div>            
+        <div class="row justify-content-center container ">
+            <input type="submit" value="create" class="btn btn-primary col-4">
+        </div>
+        
+    </form>
+</div>

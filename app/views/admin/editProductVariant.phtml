@@ -1,0 +1,95 @@
+<?php
+
+use App\Entity\Grid;
+
+ include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
+<div class="container">
+    <form action="/admin/productVariants/<?= $productVariant->getId() ?>" method="post" enctype="multipart/form-data">
+        <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+        <input type='hidden' name="_method" value='PATCH'>
+        <div class="form-row">
+            <div class="col-md-6 col-12">
+                <label for="quantity" class="col-12">Quantity</label>
+                <input type="number" name="quantity" class="form-control" value="<?= $productVariant->getStockQantity()?>"/>
+            </div>
+            <div class="col-md-6 col-12">
+                <label for="price" class="col-12">Price</label>
+                <input type="number" class="col-12 form-control" name="price" min="0.00" max="10000.00" step="0.01" value="<?= number_format($productVariant->getPrice() / 100)?>"/>
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col-xl-4 col-md-6 col-12">
+                <label for="size">Size</label>
+                <select class="form-control " name="size" value="<?= $productVariant->getGrid()->getSize()?>">
+                    <?php foreach (Grid::ACEPTED_SIZES as $item) {
+                            if ($productVariant->getGrid()->getSize() == $item) {
+                                echo "<option value=\"$item\" selected>$item</option>";
+                            } else {
+                                echo "<option value=\"$item\">$item</option>";
+                            }
+                    } ?>
+                </select>
+            </div>
+            <div class="col-xl-4 col-md-6 col-12">
+                <label for="gender">Gender</label>
+                <select class="form-control " name="gender" value="<?= $productVariant->getGrid()->getGender()?>">
+                    <?php foreach (Grid::ACEPTED_GENDERS as $item) {
+                            if ($productVariant->getGrid()->getGender() == $item) {
+                                echo "<option value=\"$item\" selected>$item</option>";
+                            } else {
+                                echo "<option value=\"$item\">$item</option>";
+                            }
+                    } ?>
+                </select>
+            </div>
+            <div class="col-xl-4 col-12">
+                <label for="colors">Color</label>
+                <select class="form-control" name="color">
+                    <?php foreach ($colors as $color) {
+                        if ($productVariant->getGrid()->getColor() == $color) {
+                            echo "<option value=\"$color\" selected>$color</option>";
+                        } else {
+                            echo "<option value=\"$color\">$color</option>";
+                        }
+                    } ?>
+                </select>
+            </div>
+            <div class="col-12 form-gorup">
+                <label for="image" class="">Image</label>
+                <input type="file" name="image" id="image" class="form-control">
+            </div>
+        </div>
+        <div class="row justify-content-center container ">
+            <input type="submit" value="edit" class="btn btn-primary col-4">
+        </div>
+    </form>
+    <table class="table mt-4">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">image</th>
+            <th scope="col">name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($images as $image):?>
+            <tr>
+                <th scope="row"><?=$image->getId()?></th>
+                <td>
+                    <div class="row container">
+                        <img src="<?= $image->getFile()?>" alt="<?= $image->getName()?>" class="col-6">
+                    </div>
+                </td>
+                <td><?= $image->getName()?></td>
+                <td>
+                    <form action="/admin/image/<?= $image->getId()?>" method="post">
+                        <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+                        <input type='hidden' name="_method" value='DELETE'> 
+                        <input type="submit" class="btn btn-danger" value="delete">
+                    </form>
+                </td>
+            </tr>
+        <?endforeach;?>
+  </table>
+</div>
