@@ -14,3 +14,4 @@ $rootRoute->get('/logout', [App\Controllers\LogoutController::class, 'index']);
 $rootRoute->get('/signingup', [App\Controllers\SigningUpController::class, 'index']);
 $rootRoute->post('/signingup', [App\Controllers\SigningUpController::class, 'post']);
 $rootRoute->get('/home',[App\Controllers\ProductController::class, 'index']);
+$rootRoute->get('/product/:id',[App\Controllers\ProductController::class, 'index']);
