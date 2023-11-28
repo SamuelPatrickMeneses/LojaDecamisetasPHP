@@ -33,9 +33,9 @@ class ProductController extends BaseController
     public function index()
     {
         switch ($this->request->getPath()) {
-            case 'home'. ($this->params[':id'] ?? '');
+            case '/product/'. ($this->params[':id'] ?? '');
                 if ($this->isValidId()) {
-                    $product = $this->service->getById(intval($this->params[':id']));
+                    $product = $this->service->getByIdwithImages(intval($this->params[':id']));
                     if (isset($product)) {
                         $this->render('product', ['product' => $product]);
                     } else {
@@ -47,7 +47,7 @@ class ProductController extends BaseController
                     $this->renderProducts();
                 }
                 break;
-            default:
+            case '/home':
                 if ($this->isValidPagination()) {
                     $pageSize = intval($this->params['ps']);
                     $pageNumber = intval($this->params['pn']);
