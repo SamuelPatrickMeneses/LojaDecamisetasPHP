@@ -1,0 +1,128 @@
+<?php
+
+use App\Entity\Grid;
+use App\Entity\Product;
+    $variants = $product->getVariants();
+    $grid = [];
+    $colors = [];
+    foreach ($variants as $variant) {
+        $label = $variant->getGrid();
+        $grid[$label] = [
+            'price' => $variant->getPrice() / 100,
+            'variant_id' => $variant->getId(),
+            'quantity' =>  $variant->getStockQantity()
+        ];
+        $label = explode('/', $label);
+        $size = $label[0];
+        $color = $label[1];
+        $gender = $label[2];
+        if (!in_array($color, $colors)){
+            $colors[] = $color;
+        }
+        if (!isset($grid[$color])) {
+            $grid[$color] = [];
+        }
+        if (!isset($grid[$color][$gender])) {
+            $grid[$color][$gender] = [];
+        }
+        $grid[$color][$gender][$size] = [
+            'price' => $variant->getPrice() / 100,
+            'variant_id' => $variant->getId(),
+            'quantity' =>  $variant->getStockQantity()
+        ];
+    }
+?>
+<div class="data-corelate d-none"><?= json_encode($grid)?></div>
+<div class="container">
+    <div class="bordes row">
+        <div class="col-md-8 col-12">
+            <div class="container-fluid carousel slide" data-ride="carousel" id="carousel">
+                <div class="carousel-inner">
+                    <?php
+                    $images = $product->getImages();
+                    $active = true;
+                    foreach ($images as $image) :
+                    ?>
+                        <div class="carousel-item <?= $active ? 'active' : '' ?>">
+                            <img class="d-block " src="<?= $image->getFile() ?>" alt="<?= $image->getName() ?>">
+                        </div>
+                    <?php
+                        $active = false;
+                    endforeach;
+                    ?>
+
+                </div>
+                <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previusly</span>
+                </a>
+                <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-12">
+            <h5 class="">
+                <?= $product->getTitle()?>
+            </h5>
+            <p class="price-view">
+            </p>
+            <p>
+                <?= $product->getDescription()?>
+            </p>
+            <form action="/cart" method="post" id="product-sale-form">
+                <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+                <input type="hidden" name="productId" id="productId" value="<?= $product->getId()?>">
+                <input type="hidden" name="variantId" id="variantId" value="">
+                <div class="form-group">
+                    <h6>Color</h6>
+                    <?php 
+                        $active = true;
+                        foreach ($colors as $color):?>
+                            <div class="form-check-inline">
+                                <input class="form-check-input  grid-color-input" type="radio" name="color" id="color-radio-<?= $color?>" value="<?= $color?>" <?= in_array($color, $colors) ? ($active ? 'checked' : ''): 'disabled'?>>
+                                <label class="form-check-label" for="color-radio-<?= $color?>"><?= $color?></label>
+                            </div>
+                        <?php 
+                            $active = false;
+                        endforeach;
+                    ?>
+                </div>
+                <div class="form-group">
+                    <h6>Gender</h6>
+                    <?php foreach (Grid::ACEPTED_GENDERS as $index => $gender):?>
+                            <div class="form-check-inline">
+                                <input class="form-check-input  grid-gender-input" type="radio" name="gender" id="gender-radio-<?= $gender?>" value="<?= $gender?>">
+                                <label class="form-check-label" for="gender-radio-<?= $gender?>"><?= $gender?></label>
+                            </div>
+                    <?php endforeach;?>
+                </div>
+                <div class="form-group">
+                    <h6 class=" form-label">Size</h6>
+                    <?php foreach (Grid::ACEPTED_SIZES as $index => $size):?>
+                            <div class="form-check-inline col-2">
+                                <input class="form-check-input grid-size-input" type="radio" name="size" id="size-radio-<?= $size?>" value="<?= $size?>">
+                                <label class="form-check-label" for="size-radio-<?= $size?>"><?= $size?></label>
+                            </div>
+                    <?php endforeach;?>
+                </div>
+                <div class="form-group">
+
+                    <label for="quantity">Quantity</label>
+                    <div class="input-group ">
+                        <input type="number" name="quantity" id="quantity" class="form-control" min="0" value="0">
+                        <div class="input-group-append">
+                            <span class="input-group-text max-quantity">R$</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="add to cart" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
