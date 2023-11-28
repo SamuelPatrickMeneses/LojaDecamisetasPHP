@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DAOs\ImageDAO;
 use App\DAOs\ProductDAO;
 use App\DAOs\ProductVariantDAO;
 use App\Entity\Product;
@@ -10,10 +11,12 @@ class ProductService
 {   
     private ProductDAO $productDAO;
     private ProductVariantDAO $productVariantDAO;
+    private ImageDAO $imageDAO;
     public function __construct()
     {
         $this->productDAO = new ProductDAO();
         $this->productVariantDAO = new ProductVariantDAO();
+        $this->imageDAO = new ImageDAO();
     }
     public function newProduct($title, $description, $price)
     {
@@ -50,6 +53,15 @@ class ProductService
         if (isset($product)) {
             $this->productVariantDAO->fetchProductVariants($product, 0);
         }
+        return $product;
+    }
+    public function getByIdwithImages($id)
+    {
+        $product =  $this->productDAO->findById($id);
+        if (isset($product)) {
+            $this->productVariantDAO->fetchProductVariants($product, 0);
+        }
+        $this->imageDAO->fatchProductImages($product);
         return $product;
     }
 }
