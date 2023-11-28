@@ -30,9 +30,9 @@ class AdminProductVariantController extends BaseController
         return isset($this->params['size'])
         && isset($this->params['color'])
         && isset($this->params['gender'])
-        && ~array_search($this->params['color'], $_SESSION['colorList'])
-        && ~array_search($this->params['size'], Grid::ACEPTED_SIZES)
-        && ~array_search($this->params['gender'], Grid::ACEPTED_GENDERS);
+        && in_array($this->params['color'], $_SESSION['colorList'])
+        && in_array($this->params['size'], Grid::ACEPTED_SIZES)
+        && in_array($this->params['gender'], Grid::ACEPTED_GENDERS);
     }
     public function isValidCreateProductVariant()
     {
