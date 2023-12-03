@@ -21,6 +21,7 @@ class Route
     private $dinamic;
     private $labels = [];
     private FilterChain $filterChain;
+    public const SUBROUTE_REGEX = '/^:[a-zA-Z_0-9]+$/';
     public function __construct()
     {
         $this->filterChain = new FilterChain();
@@ -71,7 +72,7 @@ class Route
             $splitedPath = $path === '/' ? [] : self::explodeURI($path);
             $this->use($filter, $splitedPath);
         } elseif (isset($path[0])) {
-            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+            if (preg_match(self::SUBROUTE_REGEX, $path[0])) {
                 if (!isset($this->dinamic)) {
                     throw new SubrouteNotExistsException();
                 }
@@ -100,14 +101,14 @@ class Route
             $this->dinamic += $subRoute->dinamic ?? $this->dinamic;
             $this->labels += $subRoute->labels;
         } elseif (count($path) == 1) {
-            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+            if (preg_match(self::SUBROUTE_REGEX, $path[0])) {
                 $this->labels[] = $path[0];
                 $this->dinamic = $subRoute;
             } else {
                 $this->subRoutes[$path[0]] = $subRoute;
             }
         } else {
-            if (preg_match('/^:[a-z,_]+$/', $path[0])) {
+            if (preg_match(self::SUBROUTE_REGEX, $path[0])) {
                 if (!isset($this->dinamic)) {
                     $this->dinamic = new Route();
                     $this->dinamic->errorControllers = $this->errorControllers;
@@ -135,7 +136,7 @@ class Route
         if (count($splitedPath) === 0) {
             $this->controllers[$method]['class'] = $data[0];
             $this->controllers[$method]['action'] = $data[1];
-        } elseif (preg_match('/^:[a-z,_]+$/', $splitedPath[0])) {
+        } elseif (preg_match(self::SUBROUTE_REGEX, $splitedPath[0])) {
             $this->dinamic = $this->dinamic ?? new Route();
             $this->dinamic->errorControllers = $this->errorControllers;
             $this->labels[] = array_shift($splitedPath);
