@@ -1,10 +1,22 @@
-<?php if (isset($flash['error_message'])):?>
-    <p>
-        <?=$flash['error_message']?>
-    </p>
-<?php endif;?>
-<?php if (isset($flash['success_message'])):?>
-    <p>
-        <?=$flash['success_message']?>
-    </p>
-<?php endif;?>
+<div class="container fixed-top mt-4">
+    <?php if (isset($flash['error_message'])) :
+        foreach ($flash['error_message'] as $message) : ?>
+            <p class="alert alert-danger mb-2 fade show loadbar" role="alert">
+                <?= $message ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </p>
+    <?php endforeach;
+    endif; ?>
+    <?php if (isset($flash['success_message'])) :
+        foreach ($flash['success_message'] as $message) : ?>
+            <p class="alert alert-success mb-2 fade show loadbar" role="alert">
+                <?= $message ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </p>
+    <?php endforeach;
+    endif; ?>
+</div>

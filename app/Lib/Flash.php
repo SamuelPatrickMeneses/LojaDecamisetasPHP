@@ -7,7 +7,10 @@ class Flash
     public static function message($type = null, $value = null)
     {
         if (isset($type) && isset($value)) {
-            $_SESSION['flash'][$type] = $value;
+            if (!isset($_SESSION['flash'][$type])) {
+                $_SESSION['flash'][$type] = [];
+            }
+            $_SESSION['flash'][$type][] = $value;
             return true;
         }
 
