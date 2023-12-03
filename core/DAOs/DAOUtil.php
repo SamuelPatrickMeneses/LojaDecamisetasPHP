@@ -2,8 +2,11 @@
 
 namespace Core\DAOs;
 
+use Core\DB\DBConnectionHolder;
+
 class DAOUtil
 {
+    public static $enableTransaction = true;
     public static function buildUpdateSets($values = [], $props = [])
     {
         $acumulator = '';
@@ -22,5 +25,24 @@ class DAOUtil
     public static function buildPagination($size = 0, $number = 1)
     {
         return $size === 0 ? '' : "LIMIT $size OFFSET " . ($number - 1) * $size;
+    }
+    public static  function beginTransactionIfEnable()
+    {
+        if (self::$enableTransaction) {
+            DBConnectionHolder::getConnection()->beginTransaction();
+        }
+    }
+    public static  function commitIfEnable()
+    {
+        
+        if (self::$enableTransaction && DBConnectionHolder::getConnection()->inTransaction()) {
+            DBConnectionHolder::getConnection()->commit();
+        }
+    }
+    public static function rollbackIfEnable()
+    {
+        if (self::$enableTransaction && DBConnectionHolder::getConnection()->inTransaction()) {
+            DBConnectionHolder::getConnection()->rollback();
+        }
     }
 }
