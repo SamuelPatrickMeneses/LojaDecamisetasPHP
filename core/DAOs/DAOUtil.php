@@ -26,15 +26,14 @@ class DAOUtil
     {
         return $size === 0 ? '' : "LIMIT $size OFFSET " . ($number - 1) * $size;
     }
-    public static  function beginTransactionIfEnable()
+    public static function beginTransactionIfEnable()
     {
         if (self::$enableTransaction) {
             DBConnectionHolder::getConnection()->beginTransaction();
         }
     }
-    public static  function commitIfEnable()
+    public static function commitIfEnable()
     {
-        
         if (self::$enableTransaction && DBConnectionHolder::getConnection()->inTransaction()) {
             DBConnectionHolder::getConnection()->commit();
         }

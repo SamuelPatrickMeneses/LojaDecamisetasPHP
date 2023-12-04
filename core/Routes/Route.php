@@ -89,7 +89,7 @@ class Route
             $this->filterChain->addFilter($filter);
         }
     }
-    public function setSubRoute(Route $subRoute,  array | string $path = '/')
+    public function setSubRoute(Route $subRoute, array | string $path = '/')
     {
         if (is_string($path)) {
             $path = $path === '/' ? [] : self::explodeURI($path);
