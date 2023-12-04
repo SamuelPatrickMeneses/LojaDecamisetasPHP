@@ -1,0 +1,11 @@
+<?php
+    if (isset($_SESSION['loged']) && $_SESSION['loged']) {
+        if (isset($_SESSION['user'])) {
+            include_once ROOT_PATH . '/app/views/components/userHeader.phtml';    
+        } elseif (isset($_SESSION['admin'])) {
+            include_once ROOT_PATH . '/app/views/components/adminHeader.phtml';
+        }
+    } else {
+        include_once ROOT_PATH . '/app/views/components/foreignHeader.phtml';
+    }
+?>

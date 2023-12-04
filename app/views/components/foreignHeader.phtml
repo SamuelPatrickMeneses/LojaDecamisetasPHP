@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light mb-4">
+  <a class="navbar-brand " href="/home">T-shirt Stor</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-lg-end" id="navbarNav">
+    <ul class="navbar-nav   mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/signingup">Signing Up</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" action="/home" method="get">
+      <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+      <input type="hidden" name="pn" value="1">
+      <input type="hidden" name="pn" value="12">
+      <input class="form-control mr-sm-2" type="search" placeholder="search" aria-label="Search" name="search">
+      <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
