@@ -25,3 +25,35 @@
 ul li {
     padding: 5px;
 }
+.scroller {
+    overflow: scroll;
+}
+@keyframes timeout {
+    from{
+        width: 100%;
+    }
+    to{
+        width: 0;
+    }
+}
+p.loadbar:before{
+    content:'';
+    height: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+    animation-name: timeout;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    border-radius: 2px;
+}
+p.loadbar.alert-success:before  {
+    background-color: var(--green);
+}
+p.loadbar.alert-danger:before  {
+    background-color: var(--red);
+}
+.overflow-hiden {
+    overflow: hidden;
+}
