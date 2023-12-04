@@ -1,5 +1,6 @@
 <?php
 include_once ROOT_PATH . '/config/adminRoutes.php';
+use App\Filters\Security\CheckAuthenticationFilter;
 use App\Filters\Config\OutputBufferizedFilter;
 use App\Filters\Security\CSRFFilter;
 use Core\Routes\Route;
@@ -15,3 +16,6 @@ $rootRoute->get('/signingup', [App\Controllers\SigningUpController::class, 'inde
 $rootRoute->post('/signingup', [App\Controllers\SigningUpController::class, 'post']);
 $rootRoute->get('/home',[App\Controllers\ProductController::class, 'index']);
 $rootRoute->get('/product/:id',[App\Controllers\ProductController::class, 'index']);
+$rootRoute->get('/cart',[App\Controllers\CartController::class, 'index']);
+$rootRoute->post('/cart',[App\Controllers\CartController::class, 'post']);
+$rootRoute->use(new CheckAuthenticationFilter(['GET', 'POST']), '/cart');
