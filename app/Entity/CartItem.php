@@ -11,6 +11,7 @@ class CartItem
     private $itemQuantity;
     private $itemPrice;
     private $image;
+
     public function __construct($registry = [])
     {
         if (count($registry) > 0) {
