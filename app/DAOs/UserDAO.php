@@ -48,7 +48,7 @@ class UserDAO
         }
     }
     public function updateLastLogin($userId, $gmtOfset)
-    {   
+    {
         $timestamp = gmdate('Y-m-d H:i:s');
         $comand = 'update users set last_login = :last_login, gmt_ofset = :gmt_ofset where user_id = :id';
         $statement = $this->pdo->prepare($comand);

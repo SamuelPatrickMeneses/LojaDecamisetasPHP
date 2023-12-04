@@ -15,17 +15,17 @@ class GridDAO
     {
         $this->pdo = DBConnectionHolder::getConnection();
     }
-    public function getColorList(){
+    public function getColorList()
+    {
         $comand = 'SELECT grid_color FROM grids GROUP BY grid_color';
         $statement = $this->pdo->prepare($comand);
         $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC) ?? []; 
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC) ?? [];
         $colorNumber = count($results);
         for ($i = 0; $i < $colorNumber; $i++) {
             $results[$i] = $results[$i]['grid_color'];
         }
         return $results;
-
     }
     public function newColor($color)
     {
@@ -50,22 +50,9 @@ class GridDAO
         try {
             $statement->execute();
             return true;
-        } catch (PDOException $ex ) {
+        } catch (PDOException $ex) {
             return false;
         }
-    }
-    public function findByColor($color)
-    {
-        $comand = 'SELECT * FROM grids WHERE grid_color = :color';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindParam(':color', $color);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $products = [];
-        foreach ($results as $result) {
-            $products[] = new Grid($result);
-        }
-        return $products;
     }
     public function find($size = null, $color = null, $gender = null)
     {
@@ -81,31 +68,11 @@ class GridDAO
         }
         return $products;
     }
-    public function findByGender($gender)
+    public function populateProductVariant(ProductVariant $productVariant)
     {
-        $comand = 'SELECT * FROM grids WHERE grid_gender = :gender';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindParam(':gender', $gender);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $products = [];
-        foreach ($results as $result) {
-            $products[] = new Grid($result);
-        }
-        return $products;
-    }
-    public function findBySize($size)
-    {
-        $comand = 'SELECT * FROM grids WHERE grid_size = :size';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindParam(':size', $size);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $products = [];
-        foreach ($results as $result) {
-            $products[] = new Grid($result);
-        }
-        return $products;
+        $result = $this->findById($productVariant->getGrid());
+        $productVariant->setGrid($result);
+        return $productVariant;
     }
     public function findById($id)
     {
@@ -120,11 +87,5 @@ class GridDAO
             return new Grid($result[0]);
         }
         return null;
-    }
-    public function fetchGridProductVariant(ProductVariant $productVariant)
-    {
-        $result = $this->findById($productVariant->getGrid());
-        $productVariant->setGrid($result);
-        return $productVariant;
     }
 }
