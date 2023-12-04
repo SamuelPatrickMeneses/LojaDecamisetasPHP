@@ -23,7 +23,11 @@ class AdminProductVariantController extends BaseController
     }
     public function isValidId()
     {
-        return isset($this->params[':id']) && intval($this->params[':id']) > 0;
+        return isset($this->params[':variantId']) && intval($this->params[':variantId']) > 0;
+    }
+    public function isValidProductId()
+    {
+        return isset($this->params['productId']) && intval($this->params['productId']) > 0;
     }
     public function isValidGrid()
     {
@@ -41,11 +45,12 @@ class AdminProductVariantController extends BaseController
         && intval($this->params['price']) > 0 && intval($this->params['quantity']) <= 10000
         && intval($this->params['quantity']) >= 0
         && $this->isValidGrid()
-        && isset($this->params['productId']) && intval($this->params['productId']) > 0;
+        && $this->isValidProductId();
     }
     public function isValidEditProductVariant()
     {
-        return isset($this->params['quantity'])
+        return $this->isValidProductId()
+        && isset($this->params['quantity'])
         && isset($this->params['price'])
         && intval($this->params['price']) > 0 && intval($this->params['quantity']) <= 10000
         && intval($this->params['quantity']) >= 0
@@ -56,11 +61,9 @@ class AdminProductVariantController extends BaseController
     {
         if (isset($_FILES['image'])) {
             if (!preg_match('/^.*\.(jpeg|jpg|png)$/', $_FILES['image']['name'])) {
-                Flash::message('error_message', 'invalid image type');
                 return false;
             }
             if (strlen($_FILES['image']['name']) > 250) {
-                Flash::message('error_message', 'too long image name');
                 return false;
             }
             if (intval($_FILES['image']['size']) > Image::MAX_ACEPTED_SIZE) {
@@ -84,9 +87,14 @@ class AdminProductVariantController extends BaseController
             if ($result) {
                 Flash::message('success_message', "create with success!");
                 if ($this->hasImage()) {
-                    $this->imageService->createImage($_FILES['image']['name'], $_FILES['image']['tmp_name'], $productId, $result);
+                    $this->imageService->createImage(
+                        $_FILES['image']['name'],
+                        $_FILES['image']['tmp_name'],
+                        $productId,
+                        $result
+                    );
                 }
-                $this->redirectTo('/admin/products/edit/'. ($this->params['productId'] ?? ''));
+                $this->redirectTo('/admin/products/edit/' . ($productId ?? ''));
             } else {
                 Flash::message('error_message', "error on persist");
             }
@@ -98,21 +106,26 @@ class AdminProductVariantController extends BaseController
     }
     public function edit()
     {
-
         if ($this->isValidEditProductVariant()) {
             $quantity = intval($this->params['quantity']);
             $price = intval($this->params['price']) * 100;
             $color = $this->params['color'];
             $size = $this->params['size'];
             $gender = $this->params['gender'];
-            $productId = intval($this->params[':id']);
-            $result = $this->service->updateProductVariant($productId, $quantity, $price, $size, $color, $gender);
+            $variantId = intval($this->params[':variantId']);
+            $productId = intval($this->params['productId']);
+            $result = $this->service->updateProductVariant($variantId, $quantity, $price, $size, $color, $gender);
             if ($result) {
                 Flash::message('success_message', "modified with success!");
                 if ($this->hasImage()) {
-                    $image = $this->imageService->createImage($_FILES['image']['name'], $_FILES['image']['tmp_name'], $productId, $result);
+                    $this->imageService->createImage(
+                        $_FILES['image']['name'],
+                        $_FILES['image']['tmp_name'],
+                        $productId,
+                        $variantId
+                    );
                 }
-                $this->redirectTo('/admin/products/edit/'.intval($this->params[':id']));
+                $this->redirectTo('/admin/products/' . $productId);
             } else {
                 Flash::message('error_message', "error on persist");
             }
@@ -126,26 +139,24 @@ class AdminProductVariantController extends BaseController
     {
         $colorList = $this->service->getColorList();
         $_SESSION['colorList'] = $colorList;
-        if (isset($this->params[':id'])) {
-            if ($this->isValidId()) {
-                $productVariant = $this->service->getById(intval($this->params[':id']));
-                if (isset($productVariant)) {
-                    $images = $this->imageService->imagesByVariant($productVariant->getId());
-                        $this->render('admin/editProductVariant', [
+        if ($this->isValidId()) {
+                $variantId = intval($this->params[':variantId']);
+                $productVariant = $this->service->getByIdWithImages($variantId);
+            if (isset($productVariant)) {
+                    $this->render(
+                        'admin/editProductVariant',
+                        [
                             'productVariant' => $productVariant,
                             'grid' => $productVariant->getGrid(),
                             'colors' => $colorList,
-                            'images' => $images
-                        ]);
-                } else {
-                    Flash::message('error_message', "unexistent product");
-                    $this->redirectTo('/admin/products');
-                }
+                            'images' => $productVariant->getImages()
+                        ]
+                    );
             } else {
-                Flash::message('error_message', "invalid id");
+                Flash::message('error_message', "unexistent product");
                 $this->redirectTo('/admin/products');
             }
-        } elseif (isset($this->params['productId']) && intval($this->params['productId']) > 0) {
+        } elseif ($this->isValidProductId()) {
             $this->render('admin/createProductVariant', [
                 'colors' => $colorList,
                 'productId' => intval($this->params['productId'])

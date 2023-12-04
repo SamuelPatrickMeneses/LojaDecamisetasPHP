@@ -30,10 +30,14 @@ class ProductController extends BaseController
             return false;
         }
     }
+    public function isValidSearch()
+    {
+        return isset($this->params['search']) && filter_input(INPUT_GET, 'search') === $this->params['search'];
+    }
     public function index()
     {
         switch ($this->request->getPath()) {
-            case '/product/'. ($this->params[':id'] ?? '');
+            case '/product/' . ($this->params[':id'] ?? ''):
                 if ($this->isValidId()) {
                     $product = $this->service->getByIdwithImages(intval($this->params[':id']));
                     if (isset($product)) {
@@ -48,18 +52,25 @@ class ProductController extends BaseController
                 }
                 break;
             case '/home':
-                if ($this->isValidPagination()) {
-                    $pageSize = intval($this->params['ps']);
-                    $pageNumber = intval($this->params['pn']);
-                    $this->renderProducts($pageSize, $pageNumber);
-                } else {
-                    $this->renderProducts();
+                $paginationValidity = $this->isValidPagination();
+                $searchValidity = $this->isValidSearch();
+                $search = $searchValidity ? $this->params['search'] : null;
+                if (isset($this->params['search']) && !$searchValidity) {
+                    Flash::message('error_message', "invalid search text");
                 }
+                $pageSize = $paginationValidity ? intval($this->params['ps']) : 12;
+                $pageNumber = $paginationValidity ? intval($this->params['pn']) : 1;
+                $this->renderProducts($pageSize, $pageNumber, $search);
         }
     }
-    public function renderProducts($pageSize = 12, $pageNumber = 1)
+    public function renderProducts($pageSize = 12, $pageNumber = 1, $title = null)
     {
-        $products = $this->service->getProductsWithOneImage($pageSize, $pageNumber);
+        $products = [];
+        if (isset($title)) {
+            $products = $this->service->searchProductsWithOneImage($title, $pageSize, $pageNumber);
+        } else {
+            $products = $this->service->getProductsWithOneImage($pageSize, $pageNumber);
+        }
         $count = $this->service->count();
         $pageTotal = ceil($count / $pageSize);
         $this->render('home', [
@@ -67,6 +78,7 @@ class ProductController extends BaseController
             'curentPage' => $pageNumber <= $pageTotal ? $pageNumber : 1,
             'pageSize' => $pageSize,
             'pageTotal' => $pageTotal ? $pageTotal : 0 ,
+            'search' => $title
         ]);
     }
 }
