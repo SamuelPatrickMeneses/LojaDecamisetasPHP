@@ -44,6 +44,13 @@ class AdminLoginController extends BaseController
     }
     public function index()
     {   
-        $this->render('/admin/login');
+        switch ($this->request->getPath()) {
+            case '/admin/login':
+                $this->render('/admin/login');
+                break;
+            case '/admin/logout':
+                $this->service->logout();
+                $this->render('/admin/login');
+        }
     }
 }
