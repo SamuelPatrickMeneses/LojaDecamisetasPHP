@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-
 class Image
 {
     private $id;
@@ -22,7 +21,6 @@ class Image
             $this->setProductVariant($registry['variant_id']);
         }
     }
-    
     public function getId()
     {
         return $this->id;

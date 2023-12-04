@@ -7,7 +7,6 @@ class Admin
     private $id;
     private $name;
     private $password;
-   
 
     public function __construct(array $registry = [])
     {
@@ -30,7 +29,6 @@ class Admin
     {
         return $this->password;
     }
-    
     public function setId($id)
     {
         $this->id = $id;

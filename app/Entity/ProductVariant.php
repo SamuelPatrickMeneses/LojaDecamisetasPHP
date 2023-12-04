@@ -24,7 +24,6 @@ class ProductVariant
             $this->images = null;
         }
     }
-    
 
     public function getId()
     {
@@ -93,7 +92,6 @@ class ProductVariant
     public function setStatus($status): self
     {
         $this->status = $status;
-
         return $this;
     }
 }

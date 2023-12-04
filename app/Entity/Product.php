@@ -28,7 +28,6 @@ class Product
             $this->variants = null;
         }
     }
-    
     public function getId()
     {
         return $this->id;
