@@ -32,6 +32,7 @@ use App\Entity\Product;
         ];
     }
 ?>
+<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
 <div class="data-corelate d-none"><?= json_encode($grid)?></div>
 <div class="container">
     <div class="bordes row">
@@ -74,8 +75,8 @@ use App\Entity\Product;
             </p>
             <form action="/cart" method="post" id="product-sale-form">
                 <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
-                <input type="hidden" name="productId" id="productId" value="<?= $product->getId()?>">
                 <input type="hidden" name="variantId" id="variantId" value="">
+                <input type="hidden" name="productId"  value="<?= $product->getId()?>">
                 <div class="form-group">
                     <h6>Color</h6>
                     <?php 

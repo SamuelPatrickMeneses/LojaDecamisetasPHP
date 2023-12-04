@@ -7,6 +7,7 @@ use App\Entity\Grid;
     <form action="/admin/productVariants/<?= $productVariant->getId() ?>" method="post" enctype="multipart/form-data">
         <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
         <input type='hidden' name="_method" value='PATCH'>
+        <input type="hidden" name="productId" value="<?= $productVariant->getProduct()?>">
         <div class="form-row">
             <div class="col-md-6 col-12">
                 <label for="quantity" class="col-12">Quantity</label>
