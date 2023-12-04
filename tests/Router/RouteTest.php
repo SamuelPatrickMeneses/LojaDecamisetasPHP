@@ -35,6 +35,24 @@ class RouteTest extends TestCase
         $this->route->post('/tasks', [MockController::class, 'itDontMustBeCalled']);
         $this->route->action($requet);
     }
+    public function testDinamic()
+    {
+        $requet = self::createRequest('/1', 'GET');
+        $this->route->putErrorController('not_found', [MockController::class, 'itMustBeCalled']);
+        $this->route->get('/:id', [MockController::class, 'itMustBeCalled']);
+        $this->route->post('/tasks', [MockController::class, 'itDontMustBeCalled']);
+        $this->route->action($requet);
+    }
+    public function testMultDinamic()
+    {
+        $requet = self::createRequest('/1/1', 'GET');
+        $this->route->putErrorController('not_found', [MockController::class, 'itDontMustBeCalled']);
+
+        //$this->route->get('/:id', [MockController::class, 'itDontMustBeCalled']);
+        $this->route->get('/:id/:id2', [MockController::class, 'itMustBeCalled']);
+        var_dump($this->route);
+        $this->route->action($requet);
+    }
     public function testSubrouteNotFound()
     {
         $requet = self::createRequest('/tasks/remove', 'GET');
