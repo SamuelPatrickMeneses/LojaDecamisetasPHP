@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\DAOs\ImageDAO;
-use Core\DB\DBConnectionHolder;
 use Exception;
 
 class ImageService
@@ -12,24 +11,19 @@ class ImageService
 
     public function __construct()
     {
-        $this->dao = new ImageDAO;
+        $this->dao = new ImageDAO();
     }
     public function createImage($name, $tempName, $productId, $variantId)
     {
         $tockens = explode('.', $name);
-        $storName = md5(uniqid()) . md5(uniqid()) .'.'. array_pop($tockens);
+        $storName = md5(uniqid()) . md5(uniqid()) . '.' . array_pop($tockens);
         try {
-            move_uploaded_file($tempName, '/var/www/public/uploads/'.$storName);
+            move_uploaded_file($tempName, '/var/www/public/uploads/' . $storName);
             return $this->dao->newImage($name, '/uploads/' . $storName, $variantId, $productId);
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
         return false;
-
-    }
-    public function imagesByVariant($variantId)
-    {
-        return $this->dao->findByProductVariatId($variantId);
     }
     public function deleteById($imageId)
     {
@@ -40,6 +34,5 @@ class ImageService
             return true;
         }
         return false;
-
     }
 }

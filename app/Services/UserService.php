@@ -2,16 +2,20 @@
 
 namespace App\Services;
 
+use App\DAOs\CartAndItemDAO;
 use App\DAOs\UserDAO;
 use App\Entity\User;
 use App\Exceptions\UserNotExistisException;
+use Core\DAOs\DAOUtil;
 
 class UserService
 {
     private UserDAO $dao;
+    private CartAndItemDAO $cartDAO;
     public function __construct()
     {
         $this->dao = new UserDAO();
+        $this->cartDAO = new CartAndItemDAO();
     }
 
     public function authenticate($email, $password, $gmtOfset)
@@ -43,7 +47,11 @@ class UserService
         $user->setEmail($email);
         $user->setPassword(password_hash($password, PASSWORD_BCRYPT, $opttions));
         $user->setName($name);
-        return $this->dao->insertUser($user);
+        DAOUtil::beginTransactionIfEnable();
+        $id = $this->dao->insertUser($user);
+        $this->cartDAO->newCart($id);
+        DAOUtil::commitIfEnable();
+        return true;
     }
     public function logout()
     {

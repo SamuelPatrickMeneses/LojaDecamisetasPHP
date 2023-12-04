@@ -8,7 +8,7 @@ use App\DAOs\ProductVariantDAO;
 use App\Entity\Product;
 
 class ProductService
-{   
+{
     private ProductDAO $productDAO;
     private ProductVariantDAO $productVariantDAO;
     private ImageDAO $imageDAO;
@@ -47,11 +47,15 @@ class ProductService
     {
         return $this->productDAO->findAllWithOneImage($size, $number);
     }
+    public function searchProductsWithOneImage($title, $size = 10, $number = 1)
+    {
+        return $this->productDAO->findProductsByTitleWithOneImage($title, $size, $number);
+    }
     public function getById($id)
     {
         $product =  $this->productDAO->findById($id);
         if (isset($product)) {
-            $this->productVariantDAO->fetchProductVariants($product, 0);
+            $this->productVariantDAO->populateProduct($product);
         }
         return $product;
     }
@@ -59,9 +63,9 @@ class ProductService
     {
         $product =  $this->productDAO->findById($id);
         if (isset($product)) {
-            $this->productVariantDAO->fetchProductVariants($product, 0);
+            $this->productVariantDAO->populateProduct($product);
+            $this->imageDAO->populateProduct($product);
         }
-        $this->imageDAO->fatchProductImages($product);
         return $product;
     }
 }

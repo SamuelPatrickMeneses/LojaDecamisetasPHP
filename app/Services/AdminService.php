@@ -3,9 +3,6 @@
 namespace App\Services;
 
 use App\DAOs\AdminDAO;
-use App\DAOs\UserDAO;
-use App\Entity\Admin;
-use App\Entity\User;
 use App\Exceptions\UserNotExistisException;
 
 class AdminService
