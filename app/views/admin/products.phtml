@@ -23,7 +23,7 @@
             <td><?=$product->getTitle()?></td>
             <td><?='R$ ' . number_format($product->getPrice() / 100.0,2)?></td>
             <td><?=$product->getStatus()?></td>
-            <td><a href="/admin/products/edit/<?= $product->getId()?>" class="btn">edit</a></td>
+            <td><a href="/admin/products/<?= $product->getId()?>" class="btn">edit</a></td>
           </tr>
       <?endforeach;?>
   </table>

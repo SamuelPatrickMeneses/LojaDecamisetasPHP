@@ -1,19 +1,19 @@
 <?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
 <div class="container">
-  <form action="/admin/products/edit/<?= $product->getId()?>" method="post">
+  <form action="/admin/products/<?= $product->getId()?>" method="post">
       <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
       <input type='hidden' name="_method" value='PATCH'>
       <div class="row">
         <div  class="form-group col-gl col-12">
-          <label for="title"></label>
+          <label for="title">Tile</label>
           <input type="text" name="title" value="<?= $product->getTitle()?>" class="form-control"/>
         </div>
         <div class="form-group col-gl col-12">
-          <label for="description"></label>
+          <label for="description">Description</label>
           <input type="text" name="description" value="<?= $product->getDescription() ?? ''?>"  class="form-control"/>
         </div>
         <div class="form-group col-gl col-12">
-          <label for="price"></label>
+          <label for="price">Price</label>
           <input type="number" name="price" min="0.00" max="10000.00" step="0.01" value="<?= $product->getPrice() / 100?>"  class="form-control"/>
         </div>
       </div>

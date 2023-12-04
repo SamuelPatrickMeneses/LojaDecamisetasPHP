@@ -50,16 +50,15 @@ class AdminProductController extends BaseController
             $title = $this->params['title'];
             $description = $this->params['description'];
             $price = intval($this->params['price']) * 100;
-            
             $result = $this->service->newProduct($title, $description, $price);
             if ($result) {
                 http_response_code(201);
+                Flash::message('success_message', 'product successfully created');
                 $this->renderProducts();
             } else {
                 Flash::message('error_message', "error on persist");
                 $this->redirectTo($_SESSION['lest_page'] ?? '/home');
             }
-
         } else {
             Flash::message('error_message', "invalid values");
             $this->redirectTo($_SESSION['lest_page'] ?? '/home');
@@ -80,7 +79,6 @@ class AdminProductController extends BaseController
                 Flash::message('error_message', "error on persist");
                 $this->redirectTo($_SESSION['lest_page'] ?? '/home');
             }
-
         } else {
             Flash::message('error_message', "invalid values");
             $this->redirectTo($_SESSION['lest_page'] ?? '/home');
@@ -89,10 +87,10 @@ class AdminProductController extends BaseController
     public function index()
     {
         switch ($this->request->getPath()) {
-            case '/admin/products/create';
+            case '/admin/products/create':
                 $this->render('admin/createProduct');
                 break;
-            case '/admin/products/edit/'. ($this->params[':id'] ?? '');
+            case '/admin/products/' . ($this->params[':id'] ?? ''):
                 if ($this->isValidId()) {
                     $product = $this->service->getById(intval($this->params[':id']));
                     if (isset($product)) {
