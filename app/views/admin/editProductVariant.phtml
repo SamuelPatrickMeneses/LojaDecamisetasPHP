@@ -1,8 +1,7 @@
 <?php
 
 use App\Entity\Grid;
-
- include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
+?>
 <div class="container">
     <form action="/admin/productVariants/<?= $productVariant->getId() ?>" method="post" enctype="multipart/form-data">
         <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
@@ -11,17 +10,17 @@ use App\Entity\Grid;
         <div class="form-row">
             <div class="col-md-6 col-12">
                 <label for="quantity" class="col-12">Quantity</label>
-                <input type="number" name="quantity" class="form-control" value="<?= $productVariant->getStockQantity()?>"/>
+                <input type="number" name="quantity" id="quantity" class="form-control" value="<?= $productVariant->getStockQantity()?>"/>
             </div>
             <div class="col-md-6 col-12">
                 <label for="price" class="col-12">Price</label>
-                <input type="number" class="col-12 form-control" name="price" min="0.00" max="10000.00" step="0.01" value="<?= number_format($productVariant->getPrice() / 100)?>"/>
+                <input type="number" class="col-12 form-control" name="price" id="price" min="0.00" max="10000.00" step="0.01" value="<?= number_format($productVariant->getPrice() / 100)?>"/>
             </div>
         </div>
         <div class="form-row mb-4">
             <div class="col-xl-4 col-md-6 col-12">
                 <label for="size">Size</label>
-                <select class="form-control " name="size" value="<?= $productVariant->getGrid()->getSize()?>">
+                <select class="form-control " name="size" id="size" value="<?= $productVariant->getGrid()->getSize()?>">
                     <?php foreach (Grid::ACEPTED_SIZES as $item) {
                             if ($productVariant->getGrid()->getSize() == $item) {
                                 echo "<option value=\"$item\" selected>$item</option>";
@@ -33,7 +32,7 @@ use App\Entity\Grid;
             </div>
             <div class="col-xl-4 col-md-6 col-12">
                 <label for="gender">Gender</label>
-                <select class="form-control " name="gender" value="<?= $productVariant->getGrid()->getGender()?>">
+                <select class="form-control " name="gender" id="gender" value="<?= $productVariant->getGrid()->getGender()?>">
                     <?php foreach (Grid::ACEPTED_GENDERS as $item) {
                             if ($productVariant->getGrid()->getGender() == $item) {
                                 echo "<option value=\"$item\" selected>$item</option>";
@@ -45,7 +44,7 @@ use App\Entity\Grid;
             </div>
             <div class="col-xl-4 col-12">
                 <label for="colors">Color</label>
-                <select class="form-control" name="color">
+                <select class="form-control" name="color" id="color">
                     <?php foreach ($colors as $color) {
                         if ($productVariant->getGrid()->getColor() == $color) {
                             echo "<option value=\"$color\" selected>$color</option>";
@@ -61,7 +60,7 @@ use App\Entity\Grid;
             </div>
         </div>
         <div class="row justify-content-center container ">
-            <input type="submit" value="edit" class="btn btn-primary col-4">
+            <input type="submit" value="edit" id="submit" class="btn btn-primary col-4">
         </div>
     </form>
     <table class="table mt-4">

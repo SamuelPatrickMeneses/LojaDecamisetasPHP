@@ -1,8 +1,7 @@
-<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
 <div class="container">
     <form action="/admin/productVariants/" method="post">
         <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
-        <input type="hidden" name="productId" value="<?= $productId?>">
+        <input type="hidden" name="productId" value="<?= $productId?>" id="productId">
             <div class="form-row">
                 <div class="col-md-6 col-12">
                     <label for="quantity" class="col-12">Quantity</label>
@@ -16,7 +15,7 @@
             <div class="form-row mb-4">
                 <div class="col-xl-4 col-md-6 col-12">
                     <label for="size">Size</label>
-                    <select class="form-control " name="size">
+                    <select class="form-control " name="size" id="size">
                         <option selected>Size</option>
                         <option value="PPP">PPP</option>
                         <option value="PP">PP</option>
@@ -30,7 +29,7 @@
                 </div>
                 <div class="col-xl-4 col-md-6 col-12">
                     <label for="gender">Gender</label>
-                    <select class="form-control " name="gender">
+                    <select class="form-control " name="gender" id="gender">
                         <option selected>Gender</option>
                         <option value="M">M</option>
                         <option value="F">F</option>
@@ -38,7 +37,7 @@
                 </div>
                  <div class="col-xl-4 col-12">
                     <label for="colors">Color</label>
-                    <select class="form-control" name="color">
+                    <select class="form-control" name="color" id="color">
                         <option selected>Color</option>
                         <?php foreach ($colors as $color) {
                             echo "<option value=\"$color\">$color</option>";
@@ -51,7 +50,7 @@
                 </div>
             </div>            
         <div class="row justify-content-center container ">
-            <input type="submit" value="create" class="btn btn-primary col-4">
+            <input type="submit" value="create" id="submit" class="btn btn-primary col-4">
         </div>
         
     </form>

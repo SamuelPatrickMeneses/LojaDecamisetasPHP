@@ -1,11 +1,10 @@
-<?php include ROOT_PATH . '/app/views/components/flashCard.phtml'; ?>
 <div class="container">
     <div class="card container ">
         <form action="/signingup" method="post">
             <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
             <div class="form-group">
                 <label for="email" class="form-label">email</label>
-                <input type="temail" name="email" value="<?=$email ?? ''?>" class="form-control"/>
+                <input type="temail" name="email" id="email" value="<?=$email ?? ''?>" class="form-control"/>
             </div>
             <div class="form-group">
                 <label for="name" class="form-label">name</label>
@@ -20,7 +19,7 @@
                 <input type="password" name="password2" id="password2" class="form-control" value="<?=$password2 ?? ''?>">
             </div>
             <div class="form-group">
-                <input type="submit" value="signingUp" class="btn btn-primary">
+                <input type="submit" value="signing Up" id="submit" class="btn btn-primary">
             </div>
         </form>
     </div>
