@@ -17,7 +17,7 @@ class Address
 
     public function __construct($registry = [])
     {
-        if (isset($registry)) {
+        if (count($registry) != 0) {
             $this->setId($registry['addr_id']);
             $this->setUser($registry['user_id']);
             $this->setStreet($registry['addr_street']);
