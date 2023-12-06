@@ -36,7 +36,7 @@ class AddressService
         $address->setCity($city);
         $address->setRegion($region);
         $address->setPostalCode($postalCode);
-        $address->setCity($country);
+        $address->setCountry($country);
         return $this->dao->newAddress($address);
     }
 }
