@@ -39,7 +39,7 @@ class AddressDAO
         :addr_country)";
         $statement = $this->pdo->prepare($comand);
 
-        $statement->bindValue(':user_id', $address->getId());
+        $statement->bindValue(':user_id', $address->getUser());
         $statement->bindValue(':addr_street', $address->getStreet());
         $statement->bindValue(':addr_number', $address->getNumber());
         $statement->bindValue(':addr_complement', $address->getComplement());
