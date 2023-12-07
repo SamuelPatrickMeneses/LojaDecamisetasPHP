@@ -1,6 +1,7 @@
 <?php
 
 use app\Filters\Config\OutputBufferizedFilter;
+use app\Filters\Security\CheckAdminAuthenticationFilter;
 use app\Filters\Security\CSRFFilter;
 use Core\Routes\Route;
 
@@ -25,3 +26,9 @@ $adminRoutes->get('/productVariants',[App\Controllers\Admin\AdminProductVariantC
 $adminRoutes->get('/productVariants /:variantId',[App\Controllers\Admin\AdminProductVariantController::class, 'index']);
 $adminRoutes->post('/productVariants',[App\Controllers\Admin\AdminProductVariantController::class, 'post']);
 $adminRoutes->patch('/productVariants/:variantId',[App\Controllers\Admin\AdminProductVariantController::class, 'edit']);
+$adminFilter = new CheckAdminAuthenticationFilter(['GET', 'POST', 'PATCH', 'DELETE']);
+$adminRoutes->use($adminFilter, '/logout');
+$adminRoutes->use($adminFilter, '/image');
+$adminRoutes->use($adminFilter, '/home');
+$adminRoutes->use($adminFilter, '/products');
+$adminRoutes->use($adminFilter, '/productVariants');
