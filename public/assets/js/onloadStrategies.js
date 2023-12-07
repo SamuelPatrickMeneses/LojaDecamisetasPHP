@@ -1,4 +1,5 @@
 import productFrom from "./product.js";
+import formMask from "./formMasks.js";
 var dataCorelate = {};
 
 function loadDataCorelate() {
@@ -19,6 +20,7 @@ $(() => {
     $('input.timezoneOfset').val(
         new Date().getTimezoneOffset() / 60
     );
+    formMask();
     loadDataCorelate();
     productFrom(dataCorelate);
     closeAlerts();
