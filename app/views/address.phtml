@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-lg-9 ">
+      <form id="address-form" action="/address" method="post">
+        <?php include ROOT_PATH . '/app/views/components/csrf.phtml'; ?>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="street">Street</label>
+              <input type="text" name="street" id="street" placeholder="Street" class="form-control input-lg" value="<?= $street ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="number">Number</label>
+              <input type="number" name="number" id="number" placeholder="Number" class="form-control input-lg" value="<?= $number ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="complement">Complement</label>
+              <input type="text" name="complement" id="complement" placeholder="Complement" class="form-control input-lg" value="<?= $complement ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="colors">Country</label>
+              <select class="form-control" name="country" id="country">
+                <?php
+                $curentCountry =  (isset($countryLast) && key_exists($countryLast, COUNTRIES)) ? $countryLast : 'BRA';
+                foreach (COUNTRIES as $code => $country) {
+                  if ($code == $curentCountry) {
+                    echo "<option value=\"$code\" selected>$country</option>";
+                  } else {
+                    echo "<option value=\"$code\">$country</option>";
+                  }
+                }
+                ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" name="city" placeholder="City" id="city" class="form-control input-lg" value="<?= $city ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="postalCode">CEP</label>
+              <input type="text" name="postalCode" placeholder="cep" id="postalCode" class="form-control input-lg" maxlength="7" value="<?= $postalCode ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="region">Region</label>
+              <input id="state-input" type="text" name="region" id="region" placeholder="Region" class="form-control input-lg" value="<?= $region ?? ''?>">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="locality">Locality</label>
+              <input id="state-input" type="text" name="locality" id="locality" placeholder="Locality" class="form-control input-lg" value="<?= $locality ?? ''?>">
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <input id="submit" type="submit" value="Send" class="address-form-submit btn btn-primary btn-lg">
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
