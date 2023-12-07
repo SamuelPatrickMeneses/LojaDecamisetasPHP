@@ -47,10 +47,7 @@ class RouteTest extends TestCase
     {
         $requet = self::createRequest('/1/1', 'GET');
         $this->route->putErrorController('not_found', [MockController::class, 'itDontMustBeCalled']);
-
-        //$this->route->get('/:id', [MockController::class, 'itDontMustBeCalled']);
         $this->route->get('/:id/:id2', [MockController::class, 'itMustBeCalled']);
-        var_dump($this->route);
         $this->route->action($requet);
     }
     public function testSubrouteNotFound()
