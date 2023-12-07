@@ -7,7 +7,7 @@ use Core\Http\Request;
 use Core\Routes\Filter;
 use Core\Routes\FilterChain;
 
-class CheckAuthenticationFilter implements Filter
+class CheckUserAuthenticationFilter implements Filter
 {
     private $methods = [];
 
