@@ -27,6 +27,8 @@ services:
       DB_NAME: "${DB_NAME}"
       DB_PORT: "${DB_PORT:-3306}"
       DB_HOST: "${DB_HOST:-db}"
+      PAGBANK_API: "${PAGBANK_API}"
+      PAGBANK_API_TOKEN: "${PAGBANK_API_TOKEN}"
       
   db:
     image: mysql:8.1.0

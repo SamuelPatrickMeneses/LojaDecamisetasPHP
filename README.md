@@ -35,6 +35,12 @@ the database root password, used by db container.
 ##### MYSQL_ROOT_USER
 the database root user, used by db container.
 
+##### PAGBANK_API
+the babanck api url, used by php container.
+
+##### PAGBANK_API_TOKEN
+the pagbank api token, used by php containher.
+
 ##### DATASET
 according to the value select a data set in the database folder, used by database/generateUserAndDB.
 values:
