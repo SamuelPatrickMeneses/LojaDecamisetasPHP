@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS addresses (
 
 CREATE TABLE IF NOT EXISTS api_public_key (
     apk_id INT(11) AUTO_INCREMENT,
-    apk_text a  VARCHAR(400),
+    apk_text VARCHAR(400),
     apk_time DATETIME NOT NULL,
     PRIMARY KEY (apk_id)
 );
