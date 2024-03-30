@@ -121,6 +121,12 @@ CREATE TABLE IF NOT EXISTS addresses (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+CREATE TABLE IF NOT EXISTS api_public_key (
+    apk_id INT(11) AUTO_INCREMENT,
+    apk_text a  VARCHAR(400),
+    apk_time DATETIME NOT NULL,
+    PRIMARY KEY (apk_id)
+);
 
 DELIMITER $
   CREATE TRIGGER IF NOT EXISTS update_product_price_on_update AFTER UPDATE ON product_variants
