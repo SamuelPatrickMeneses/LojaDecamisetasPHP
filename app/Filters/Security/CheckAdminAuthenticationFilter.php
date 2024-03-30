@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Filters\Security;
+namespace App\Filters\Security;
 
 use App\Lib\Flash;
 use Core\Http\Request;
@@ -18,7 +18,7 @@ class CheckAdminAuthenticationFilter implements Filter
     public function doFilter(Request $requst, FilterChain $filterChain)
     {
         $redirect = in_array($requst->getMethod(), $this->methods)
-        && !isset($_SESSION['admin']); 
+        && !isset($_SESSION['admin']);
         if ($redirect) {
             Flash::message('error_message', "do login to use uor service.");
             header('location: /admin/login');
