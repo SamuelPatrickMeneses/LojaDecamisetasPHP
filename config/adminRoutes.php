@@ -1,8 +1,8 @@
 <?php
 
-use app\Filters\Config\OutputBufferizedFilter;
-use app\Filters\Security\CheckAdminAuthenticationFilter;
-use app\Filters\Security\CSRFFilter;
+use App\Filters\Config\OutputBufferizedFilter;
+use App\Filters\Security\CheckAdminAuthenticationFilter;
+use App\Filters\Security\CSRFFilter;
 use Core\Routes\Route;
 
 $adminRoutes = new Route();
