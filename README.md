@@ -13,13 +13,13 @@ Back-End aplication development discipline project
 - [x] 3. No mínimo um CRUD, CREATE, RETRIVE, UPDATE, DELETE.
 - [x] 4. Permitir upload de Imagem.
 - [x] 5. Deve existir pelo menos uma relação 1xN.
-- [ ] 6. Deve existir pelo menos uma relação NxN.
+- [x] 6. Deve existir pelo menos uma relação NxN.
 - [ ] 7. Todas as devidas validações devem ser realizadas.
-- [ ] 8. O sistema deve fazer uso dos seguintes tipos de campos:
+- [x] 8. O sistema deve fazer uso dos seguintes tipos de campos:
 - - [x] a. Input, text, e-mail, password, date, file
 - - [x] b. Select
 - - [x] c. Checkbox
-- - [ ] d. Radio
+- - [x] d. Radio
 - [ ] 9. Deve ter pelo menos uma requisição usando Ajax.
 - [x] 10. Todo o código deve ser escrito em inglês.
 - [ ] 11. Não deve existir temas iguais entre os alunos/duplas.
@@ -104,6 +104,7 @@ $ ./run db:reset
 ```
 
 ### Run tests 
+
 ```
 $ ./run <test path> 
 ```
