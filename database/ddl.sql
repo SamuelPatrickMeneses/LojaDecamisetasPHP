@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS product_variants (
   stock_quantity INT(8) NOT NULL DEFAULT 0,
   variant_status TINYINT NOT NULL,
   PRIMARY KEY (variant_id),
-  FOREIGN KEY (product_id) REFERENCES products(product_id)
+  FOREIGN KEY (product_id) REFERENCES products(product_id),
+  FOREIGN KEY (grid_id) REFERENCES grids(grid_id)
 ) CHARACTER SET=utf8;
 
 CREATE TABLE IF NOT EXISTS images (
@@ -127,21 +128,3 @@ CREATE TABLE IF NOT EXISTS api_public_key (
     apk_time DATETIME NOT NULL,
     PRIMARY KEY (apk_id)
 );
-
-DELIMITER $
-  CREATE TRIGGER IF NOT EXISTS update_product_price_on_update AFTER UPDATE ON product_variants
-  FOR EACH ROW
-  BEGIN
-    DECLARE new_price INT;
-    SELECT price INTO new_price FROM product_variants WHERE product_id = NEW.product_id AND variant_status = 1 LIMIT 1 OFFSET 0;
-    UPDATE products SET product_price = new_price WHERE product_id = NEW.product_id;
-  END$
-
-  CREATE TRIGGER IF NOT EXISTS update_product_price_on_insert AFTER INSERT ON product_variants
-  FOR EACH ROW
-  BEGIN
-    DECLARE new_price INT;
-    SELECT price INTO new_price FROM product_variants WHERE product_id = NEW.product_id AND variant_status = 1 LIMIT 1 OFFSET 0;
-    UPDATE products SET product_price = new_price WHERE product_id = NEW.product_id;
-  END$
-DELIMITER ;
