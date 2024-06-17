@@ -2,8 +2,7 @@
 
 use Core\Http\RequestFactory;
 use Core\Routes\Route;
-
-define('ROOT_PATH', dirname(__DIR__));
+require_once './constants.php';
 session_start();
 require_once ROOT_PATH . '/vendor/autoload.php';
 
