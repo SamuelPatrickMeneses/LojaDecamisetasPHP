@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Router;
+namespace Tests\Core\Router;
 
 use PHPUnit\Framework\TestCase;
 use Core\Routes\Route;

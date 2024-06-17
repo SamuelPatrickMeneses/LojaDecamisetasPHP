@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Router;
+namespace Tests\Core\Router;
 
 use Core\Controllers\BaseController;
 use PHPUnit\Framework\Assert;

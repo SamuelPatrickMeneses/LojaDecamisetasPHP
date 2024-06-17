@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Services;
+namespace Tests\App\Services;
 
 use App\Services\PublicKeyService;
 use PHPUnit\Framework\TestCase;

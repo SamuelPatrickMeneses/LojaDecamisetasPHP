@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Router;
+namespace Tests\Core\Router;
 
 use Core\Http\Request;
 use Core\Routes\Filter;

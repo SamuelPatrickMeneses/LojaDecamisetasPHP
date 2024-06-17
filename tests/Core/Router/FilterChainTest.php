@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Router;
+namespace Tests\Core\Router;
 
 use PHPUnit\Framework\TestCase;
 use Core\Routes\Route;
 use Core\Http\Request;
 use Core\Routes\Exceptions\SubrouteNotExistsException;
 use PHPUnit\Framework\Assert;
-use Tests\Router\MockFilter;
+use Tests\Core\Router\MockFilter;
 
 class FilterChainTest extends TestCase
 {
