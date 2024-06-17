@@ -6,7 +6,7 @@
             "Core\\": "core/",
             "Tests\\": "tests/"
         },
-        "files": ["config/countries.php"]
+        "files": ["config/countries.php","config/constants.php"]
     },
     "require-dev": {
         "phpunit/phpunit": "^10",
