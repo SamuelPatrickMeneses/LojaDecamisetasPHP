@@ -12,7 +12,6 @@ class PublicKeyService
     private $token;
     private $url;
     private ApiPublicKeyDAO $dao;
-    const int YEAR_TIME = 31536000000;
     public function __construct()
     {
         $this->token = $_ENV['PAGBANK_API_TOKEN'] | '';
@@ -92,7 +91,7 @@ class PublicKeyService
         [$curentKey] = $this->dao->find();
         if (isset($curentKey)) {
             $lifeTime = TimeUtil::now() % TimeUtil::dateTimeToTime($curentKey->getTime());
-            if ($lifeTime > PublicKeyService::YEAR_TIME) {
+            if ($lifeTime > YEAR_TIME) {
                 return $this->changeKey();
             } else {
                 return $curentKey->getText();

@@ -18,13 +18,9 @@ class ProductService
         $this->productVariantDAO = new ProductVariantDAO();
         $this->imageDAO = new ImageDAO();
     }
-    public function newProduct($title, $description, $price)
+    public function newProduct(string $title, string $description, float $price)
     {
-        $product = new Product();
-        $product->setTitle($title);
-        $product->setDescription($description);
-        $product->setPrice($price);
-        $product->setStatus(1);
+        $product = new Product(compact('title', 'description', 'price'));
         return $this->productDAO->insertProduct($product);
     }
     public function count()

@@ -51,13 +51,10 @@ class CartService
                 $this->dao->newCartItem($userId, $quantity, $variant);
             }
             DAOUtil::commitIfEnable();
-        } catch (InsufficientQuantityException $ex) {
+        } catch (InvalidVariantIdException | InsufficientQuantityException $ex) {
             DAOUtil::rollbackIfEnable();
             throw $ex;
-        } catch (InvalidVariantIdException $ex) {
-            DAOUtil::rollbackIfEnable();
-            throw $ex;
-        } catch (Exception $ex) {
+        }  catch (Exception $ex) {
             echo $ex->getMessage();
         }
         return false;

@@ -25,18 +25,28 @@ class AddressService
     {
         return $this->dao->deleteById($id);
     }
-    public function create($user, $street, $number, $complement, $locality, $city, $region, $postalCode, $country)
+    public function create(
+        int $user,
+        string $street,
+        $number, string
+        $complement,
+        string $locality,
+        string $city,
+        string $region,
+        string $postalCode,
+        string $country)
     {
-        $address = new Address();
-        $address->setUser($user);
-        $address->setStreet($street);
-        $address->setNumber($number);
-        $address->setComplement($complement);
-        $address->setLocality($locality);
-        $address->setCity($city);
-        $address->setRegion($region);
-        $address->setPostalCode($postalCode);
-        $address->setCountry($country);
+        $address = new Address(compact(
+            'user',
+            'street',
+            'number',
+            'complement',
+            'locality',
+            'city',
+            'region',
+            'postalCode',
+            'country'
+        ));
         return $this->dao->newAddress($address);
     }
 }
