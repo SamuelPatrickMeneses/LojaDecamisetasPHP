@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class Product
 {
     private $id;
@@ -10,23 +13,32 @@ class Product
     private $price;
     private $variants;
     private $images;
-    private $status;
+    private $status = 1;
 
-    public function __construct(array $registry = [])
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['product_id']);
-            $this->setTitle($registry['product_title']);
-            $this->setDescription($registry['product_description']);
-            $this->setPrice($registry['product_price']);
-            $this->setStatus($registry['product_status']);
-            if (isset($registry['image_file'])) {
-                $this->images = [$registry['image_file']];
-            } else {
-                $this->images = null;
-            }
-            $this->variants = null;
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'products');
+            self::$orm->
+                add('id','product_id', ['increment' => true])->
+                add('title', 'product_title')->
+                add('description', 'product_description')->
+                add('price', 'product_price')->
+                add('status', 'product_status')->
+                setPrimaryKey('product_id');
+        } 
+        return self::$orm;
+    }
+    public function __construct($registry = [])
+    {
+        $this->construct($this, $registry);
+        if (isset($registry['image_file'])) {
+            $this->images = [$registry['image_file']];
+        } else {
+            $this->images = null;
         }
+        $this->variants = null;
     }
     public function getId()
     {

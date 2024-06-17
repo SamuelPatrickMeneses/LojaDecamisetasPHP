@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class Image
 {
     private $id;
@@ -11,15 +14,24 @@ class Image
     private $product;
     public const MAX_ACEPTED_SIZE = (2 * 1048576);// 2MB
 
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
+    {
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'images');
+            self::$orm->
+                add('id','image_id', ['increment' => true])->
+                add('name', 'image_name')->
+                add('file', 'image_file')->
+                add('product', 'product_id')->
+                add('productVariant', 'variant_id')->
+                setPrimaryKey('image_id');
+        }
+        return self::$orm;
+    }
     public function __construct($registry = [])
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['image_id']);
-            $this->setName($registry['image_name']);
-            $this->setFile($registry['image_file']);
-            $this->setProduct($registry['product_id']);
-            $this->setProductVariant($registry['variant_id']);
-        }
+        $this->construct($this, $registry);
     }
     public function getId()
     {

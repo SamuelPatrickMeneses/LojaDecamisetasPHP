@@ -2,25 +2,38 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class Grid
 {
     private $id;
     private $size;
     private $color;
     private $gender;
+    private $label;
     private $productVariants;
     public const ACEPTED_SIZES = ['PPP', 'PP', 'P', 'M', 'G', '2G', '3G', '4G'];
     public const ACEPTED_GENDERS = ['M', 'F'];
 
-    public function __construct(array $registry = [])
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['grid_id']);
-            $this->setColor($registry['grid_color']);
-            $this->setSize($registry['grid_size']);
-            $this->setGender($registry['grid_gender']);
-            $this->productVariants = null;
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'grids');
+            self::$orm->
+                add('id','grid_id', ['increment' => true])->
+                add('color', 'grid_color')->
+                add('size', 'grid_size')->
+                add('gender', 'grid_gender')->
+                add('label', 'grid_label')->
+                setPrimaryKey('grid_id');
         }
+        return self::$orm;
+    }
+    public function __construct($registry = [])
+    {
+        $this->construct($this, $registry);
     }
 
     public function getId()
@@ -75,6 +88,12 @@ class Grid
     }
     public function getLabel()
     {
-        return "$this->size/$this->color/$this->gender";
+        return isset($this->label)
+            ? $this->label
+            : "$this->size/$this->color/$this->gender";
+    }
+    public function setLabel($label)
+    {
+        $this->label = $label;
     }
 }

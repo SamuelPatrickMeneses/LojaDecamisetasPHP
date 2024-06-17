@@ -2,29 +2,41 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class User
 {
     private $id;
     private $name;
     private $password;
     private $email;
-    private $phone;
-    private $notfy;
-    private $lastLogin;
+    private $phone = '';
+    private $notfy = 0;
+    private string $lastLogin;
     private $gmtOfset;
 
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
+    {
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'users');
+            self::$orm->
+                add('id','user_id', ['increment' => true])->
+                add('name', 'user_name')->
+                add('password', 'user_password')->
+                add('email', 'email')->
+                add('phone', 'phone')->
+                add('notify', 'notify')->
+                add('lastLogin', 'last_login')->
+                add('gmtOfset', 'gmt_ofset')->
+                setPrimaryKey('user_id');
+        } 
+        return self::$orm;
+    }
     public function __construct(array $registry = [])
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['user_id']);
-            $this->setName($registry['user_name']);
-            $this->setPassword($registry['user_password']);
-            $this->setEmail($registry['email']);
-            $this->setPhone($registry['phone']);
-            $this->setNotfy($registry['notfy']);
-            $this->setLastLogin($registry['last_login']);
-            $this->setGmtOfset($registry['gmt_ofset']);
-        }
+        $this->construct($this, $registry);
     }
 
     public function getId()

@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class CartItem
 {
     private $id;
@@ -12,16 +15,25 @@ class CartItem
     private $itemPrice;
     private $image;
 
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
+    {
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'cart_items');
+            self::$orm->
+                add('id','item_id', ['increment' => true])->
+                add('product', 'product_id')->
+                add('varinat', 'varinat_id')->
+                add('user', 'user_id')->
+                add('itemPrice', 'cart_item_price')->
+                add('itemQuantity', 'cart_item_quantity')->
+                setPrimaryKey('item_id');
+        }
+        return self::$orm;
+    }
     public function __construct($registry = [])
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['item_id']);
-            $this->setProduct($registry['product_id']);
-            $this->setVariant($registry['variant_id']);
-            $this->setUser($registry['user_id']);
-            $this->setItemPrice($registry['cart_item_price']);
-            $this->setItemQuantity($registry['cart_item_quantity']);
-        }
+        $this->construct($this, $registry);
     }
 
     public function getId()

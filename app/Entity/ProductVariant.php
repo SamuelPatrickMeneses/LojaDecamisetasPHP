@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Core\DAOs\Entity;
+use Core\DAOs\ObjectRelacionalModel;
+
 class ProductVariant
 {
     private $id;
@@ -10,19 +13,29 @@ class ProductVariant
     private $grid;
     private $images;
     private $stockQantity;
-    private $status;
+    private $status = 1;
 
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
+    {
+        if (!isset(self::$orm)) {
+            self::$orm =  new ObjectRelacionalModel(self::class, 'product_variants');
+            self::$orm->
+                add('id','variant_id', ['increment' => true])->
+                add('product', 'product_id')->
+                add('grid', 'grid_id')->
+                add('price', 'variant_price')->
+                add('stockQuantity', 'stock_quantity')->
+                add('status', 'variant_status')->
+                setPrimaryKey('variant_id');
+        } 
+        return self::$orm;
+    }
     public function __construct(array $registry = [])
     {
-        if (count($registry) > 0) {
-            $this->setId($registry['variant_id']);
-            $this->setProduct($registry['product_id']);
-            $this->setPrice($registry['price']);
-            $this->setGrid($registry['grid_label'] ?? $registry['grid_id']);
-            $this->setStockQantity($registry['stock_quantity']);
-            $this->setStatus($registry['variant_status']);
-            $this->images = null;
-        }
+        $this->construct($this, $registry);
+        $this->images = null;
+        $this->setGrid($registry['grid_label'] ?? $registry['grid_id'] ?? '');
     }
 
     public function getId()

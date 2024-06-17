@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Core\DAOs\ObjectRelacionalModel;
+use Core\DAOs\Entity;
 class Address
 {
     private $id;
@@ -14,21 +16,29 @@ class Address
     private $region;
     private $postalCode;
     private $country;
-
+    use Entity;
+    public static function getORM(): ObjectRelacionalModel
+    {
+        if (!isset(Address::$orm)) {
+            Address::$orm =  new ObjectRelacionalModel(self::class, 'addresses');
+            Address::$orm->
+                add('id','addr_id', ['increment' => true])->
+                add('user', 'user_id')->
+                add('street', 'addr_street')->
+                add('number', 'addr_number')->
+                add('complement', 'addr_complement')->
+                add('locality', 'addr_locality')->
+                add('city', 'addr_city')->
+                add('region', 'addr_region')->
+                add('postalCode', 'addr_postal_code')->
+                add('country', 'addr_country')
+                ->setPrimaryKey('addr_id');
+        }
+        return Address::$orm;
+    }
     public function __construct($registry = [])
     {
-        if (count($registry) != 0) {
-            $this->setId($registry['addr_id']);
-            $this->setUser($registry['user_id']);
-            $this->setStreet($registry['addr_street']);
-            $this->setNumber($registry['addr_number']);
-            $this->setComplement($registry['addr_complement']);
-            $this->setLocality($registry['addr_lacality']);
-            $this->setCity($registry['addr_city']);
-            $this->setRegion($registry['addr_region']);
-            $this->setPostalCode($registry['addr_postal_code']);
-            $this->setCountry($registry['addr_contry']);
-        }
+        $this->construct($this, $registry);
     }
     
     public function getId()
