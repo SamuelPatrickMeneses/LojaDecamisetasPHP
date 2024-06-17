@@ -6,25 +6,23 @@ use App\Exceptions\InsufficientQuantityException;
 use App\Exceptions\InvalidVariantIdException;
 use App\Lib\Flash;
 use App\Services\CartService;
+use App\Validators\CartValidator;
 use Core\Controllers\BaseController;
 use Core\Http\Request;
 
 class CartController extends BaseController
 {
     private CartService $service;
+    private CartValidator $valid;
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->service = new CartService();
-    }
-    public function isValidCreateItem()
-    {
-        return isset($this->params['variantId']) && intval($this->params['variantId']) > 0
-        && isset($this->params['quantity']) && intval($this->params['quantity']) > 0;
+        $this->valid = new CartValidator($this->params);
     }
     public function post()
     {
-        if ($this->isValidCreateItem()) {
+        if ($this->valid->isValidCreateItem()) {
             try {
                 $quantity = (intval($this->params['quantity']));
                 $variantId = intval($this->params['variantId']);
