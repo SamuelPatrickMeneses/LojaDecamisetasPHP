@@ -6,60 +6,25 @@ use App\Entity\CartItem;
 use App\Entity\Image;
 use App\Entity\Product;
 use App\Entity\ProductVariant;
-use Core\DB\DBConnectionHolder;
-use PDO;
-use PDOException;
+use Core\DAOs\BaseDAO;
+use Core\DAOs\PaginationExpression;
+use Core\DAOs\QueryBuilder;
 
-class ImageDAO
+class ImageDAO extends BaseDAO
 {
-    private $pdo;
     public function __construct()
     {
-        $this->pdo = DBConnectionHolder::getConnection();
+        parent::__construct(Image::getORM());  
     }
-    public function newImage($name, $file, $productId, $variantId)
+    public function newImage(string $name, string $file, int $product, int $productVariant)
     {
-        $comand = "INSERT INTO images (image_name, image_file, variant_id, product_id)
-        VALUES (:image_name, :image_file, :variant_id, :product_id)";
+        $comand =  QueryBuilder::insert($this->orm);
         $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':image_name', $name);
-        $statement->bindValue(':image_file', $file);
-        $statement->bindValue(':variant_id', $variantId);
-        $statement->bindValue(':product_id', $productId);
-        try {
-            $statement->execute();
-            return intval($this->pdo->lastInsertId());
-        } catch (PDOException $ex) {
-            return false;
-        }
-    }
-    public function findById($id)
-    {
-        $comand = 'SELECT * FROM images WHERE image_id = :id';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':id', $id);
-
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        if (isset($result[0])) {
-            return new Image($result[0]);
-        }
-        return null;
-    }
-    public function deleteById($id)
-    {
-        $comand = 'DELETE FROM images WHERE image_id = :id';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':id', $id);
-        try {
-            $statement->execute();
-            return true;
-        } catch (PDOException $ex) {
-            return false;
-        }
-
-        return null;
+        $this->bindNew($statement, compact(
+            'name', 'file', 'product',
+            'productVariant'
+        ));
+        return $this->execute($statement);
     }
     public function populateCartItem(CartItem $item)
     {
@@ -73,46 +38,23 @@ class ImageDAO
         $product->setImages($images);
     }
 
-    public function findByProductId($id)
+    public function findByProductId(int $id)
     {
-        $comand = 'SELECT * FROM images WHERE product_id = :product_id';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':product_id', $id);
-
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        $images = [];
-        foreach ($results as $result) {
-            $images[] = new Image($result);
-        }
-        return $images;
+        return $this->findByField('product', $id);
     }
-    public function findOneByProductId($id)
+    public function findOneByProductId($product)
     {
-        $comand = 'SELECT * FROM images WHERE product_id = :id LIMIT 1 OFFSET 0';
+        $comand = QueryBuilder::find($this->orm)->
+            byField('product')->
+            setPagination(new PaginationExpression(1, 0));
         $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':id', $id);
-
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        if ($results[0]) {
-            return new Image($results[0]);
-        }
-        return null;
+        $statement->bindValue(':product', $product);
+        return $this->fetchOne($statement);
     }
     public function populateProductVariat(ProductVariant $variant)
     {
-        $comand = 'SELECT * FROM images WHERE variant_id = :variant_id ';//AND product_id = :product_id';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindValue(':variant_id', $variant->getId());
-        //$statement->bindValue(':product_id', $variant->getProduct());
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $images = [];
-        foreach ($results as $result) {
-            $images[] = new Image($result);
-        }
+        $images = $this->findByField('productVariant', $variant->getId());
         $variant->setImages($images);
+        return $variant;
     }
 }

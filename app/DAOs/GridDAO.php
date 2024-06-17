@@ -4,16 +4,15 @@ namespace App\DAOs;
 
 use App\Entity\Grid;
 use App\Entity\ProductVariant;
-use Core\DB\DBConnectionHolder;
+use Core\DAOs\BaseDAO;
+use Core\DAOs\QueryBuilder;
 use PDO;
-use PDOException;
 
-class GridDAO
+class GridDAO extends BaseDAO
 {
-    private PDO $pdo;
     public function __construct()
     {
-        $this->pdo = DBConnectionHolder::getConnection();
+        parent::__construct(Grid::getORM());
     }
     public function getColorList()
     {
@@ -47,45 +46,21 @@ class GridDAO
             ('3G' , '$color', 'F', '3G/$color/F'),
             ('4G' , '$color', 'F', '4G/$color/F')";
         $statement = $this->pdo->prepare($comand);
-        try {
-            $statement->execute();
-            return true;
-        } catch (PDOException $ex) {
-            return false;
-        }
+        return $this->execute($statement);
     }
-    public function find($size = null, $color = null, $gender = null)
+    public function findByLabel($size = null, $color = null, $gender = null)
     {
         $label = ($size ?? '%') . '/' . ($color ?? '%') . '/' . ($gender ?? '%');
-        $comand = 'SELECT * FROM grids WHERE grid_label like :label';
+        $comand = QueryBuilder::find($this->orm)->
+           byFieldLike('label') . 'SELECT * FROM grids WHERE grid_label like :label';
         $statement = $this->pdo->prepare($comand);
         $statement->bindParam(':label', $label);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $products = [];
-        foreach ($results as $result) {
-            $products[] = new Grid($result);
-        }
-        return $products;
+        return $this->fetch($statement);
     }
     public function populateProductVariant(ProductVariant $productVariant)
     {
         $result = $this->findById($productVariant->getGrid());
         $productVariant->setGrid($result);
         return $productVariant;
-    }
-    public function findById($id)
-    {
-        $comand = 'SELECT * FROM grids WHERE grid_id = :id';
-        $statement = $this->pdo->prepare($comand);
-        $statement->bindParam(':id', $id);
-
-        $statement->execute();
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        if (isset($result[0])) {
-            return new Grid($result[0]);
-        }
-        return null;
     }
 }
