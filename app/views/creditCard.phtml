@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card">
+                <form action="/orders" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Owner Name</label>
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="flag">Flag</label>
+                                <select class="form-control" name="flag" id="flag">
+                                    <option value="american express" selected>American Express</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="maestro">Maestro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="number" name="cvv" id="cvv" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="cardNumber" class="form-label">Number</label>
+                                <input type="number" name="cardNumber" id="cardNumber" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="month">Month</label>
+                                <input type="number" name="month" id="month" min="1" max="12">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="year">Year</label>
+                                <input type="number" name="year" id="year" min="<?= date('Y')?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-6 col-md-3">
+                            <div class="form-group">
+                                <input type="submit" value="checkout" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

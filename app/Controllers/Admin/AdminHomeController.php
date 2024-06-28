@@ -2,13 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use App\Services\AdminService;
 use Core\Controllers\BaseController;
 use Core\Http\Request;
 
 class AdminHomeController extends BaseController
 {
-    private AdminService $service;
 
     public function __construct(Request $request)
     {

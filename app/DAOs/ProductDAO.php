@@ -22,11 +22,11 @@ class ProductDAO extends BaseDAO
     {
         $pagination = new PaginationExpression($pageZise, $pageNumber);
         $comand = "SELECT
-        product_id,
-        product_title,
-        product_description,
-        product_price,
-        product_status,
+        product_id AS id,
+        product_title AS title,
+        product_description AS description,
+        product_price AS price,
+        product_status AS status,
         MIN(image_file) AS image_file
         FROM products JOIN images using(product_id)
         WHERE MATCH (product_title) AGAINST (:title)
@@ -43,12 +43,12 @@ class ProductDAO extends BaseDAO
     {
         $pagination = new PaginationExpression($pageSise, $pageNumber);
         $comand = "SELECT
-        product_id,
-        product_title,
-        product_description,
-        product_price,
-        product_status,
-        MAX(image_file) AS image_file
+        product_id AS id,
+        product_title AS title,
+        product_description AS description,
+        product_price AS price,
+        product_status AS status,
+        MIN(image_file) AS image_file
         FROM products RIGHT JOIN images using(product_id)
         GROUP BY product_id $pagination";
         $statement = $this->pdo->prepare($comand);

@@ -131,6 +131,6 @@ class ValidatorTest extends TestCase
             $definitions,
             fn() => $this->assertTrue(true) 
         );
-        $valid->validateAll();
+        $valid->validateFields(['foo']);
     }
 }

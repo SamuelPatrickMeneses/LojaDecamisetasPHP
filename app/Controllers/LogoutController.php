@@ -2,12 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Lib\Flash;
 use App\Services\UserService;
 use Core\Controllers\BaseController;
-use Core\Http\CSRF;
 use Core\Http\Request;
-use Exception;
 
 class LogoutController extends BaseController
 {

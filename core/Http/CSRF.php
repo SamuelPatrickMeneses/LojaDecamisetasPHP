@@ -2,6 +2,7 @@
 
 namespace Core\Http;
 
+
 class CSRF
 {
     private static $token;
@@ -16,7 +17,10 @@ class CSRF
     }
     public static function validateToken($token)
     {
-        $oldToken = ($_SESSION['csrf_token'] ?? '');
-        return $token === $oldToken;
+        if (!isset($_SESSION['csrf_token'])) {
+            return false;
+        }
+        $oldToken = $_SESSION['csrf_token'] ;
+        return strcmp($token, $oldToken) === 0;
     }
 }

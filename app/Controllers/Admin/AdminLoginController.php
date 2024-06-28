@@ -4,53 +4,56 @@ namespace App\Controllers\Admin;
 
 use App\Lib\Flash;
 use App\Services\AdminService;
+use App\Validators\AdminLoginValidator;
+use App\Validators\AdminValidator;
 use Core\Controllers\BaseController;
 use Core\Http\Request;
 
 class AdminLoginController extends BaseController
 {
     private AdminService $service;
-
+    private AdminLoginValidator $validator;
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->service = new AdminService();
-    }
-    public function validateInputs($name, $password)
-    {
-        return preg_match('/^[a-zA-Z0-9]{5,100}$/', $name)
-        && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password);
+        $this->validator = new AdminValidator($this->params);
     }
     public function post()
     {
-        $authenticate = false;
+        $obj = $this;
+        $valid = $this->validator->validateInputs(
+            function() use ($obj)
+            {
+                http_response_code(422);
+                Flash::message('error_message', "invalid credentials");
+                $obj->render('/admin/login');
+            }
+        );
+        if (!$valid) {
+            $this->login();
+        }
+    }
+    private function login()
+    {
         $name = $this->params['name'];
         $password = $this->params['password'];
-        var_dump($this->validateInputs($name, $password));
-        if ($this->validateInputs($name, $password)) {
-            $authenticate = $this->service->authenticate($name, $password);
-            if ($authenticate) {
-                $this->redirectTo('/admin/home');
-            } else {
-                http_response_code(401);
-                Flash::message('error_message', "user or password incorect");
-                $this->render('/admin/login');
-            }
+        $authenticate = $this->service->authenticate($name, $password);
+        if ($authenticate) {
+            $this->redirectTo('/admin/home');
         } else {
-            http_response_code(422);
-            Flash::message('error_message', "invalid credentials");
+            http_response_code(401);
+            Flash::message('error_message', "user or password incorect");
             $this->render('/admin/login');
         }
     }
-    public function index()
+    public function loginGet()
     {   
-        switch ($this->request->getPath()) {
-            case '/admin/login':
-                $this->render('/admin/login');
-                break;
-            case '/admin/logout':
-                $this->service->logout();
-                $this->render('/admin/login');
-        }
+        $this->render('/admin/login');
+    }
+    public function logoutGet()
+    {
+        $this->service->logout();        
+        $this->render('/admin/login');   
     }
 }

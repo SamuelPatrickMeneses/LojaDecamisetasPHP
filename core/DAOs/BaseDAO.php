@@ -136,6 +136,7 @@ class BaseDAO
         try {
             $statement->execute();
             $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
             $entities = [];
             foreach ($rows as $row) {
                 $entities[] = new $class($row);
@@ -146,6 +147,7 @@ class BaseDAO
                 $callback($ex);
             }
         } 
+        return [];
         
     }
     protected function fetchOne(PDOStatement $statement, $callback = null)
@@ -157,12 +159,12 @@ class BaseDAO
             if (isset($rows[0])) {
                 return new $class($rows[0]);
             }
+
         } catch (PDOException $ex) {
             if (is_callable($callback)) {
                 $callback($ex);
             }
         }
-        
     }
     protected function fetchCount(PDOStatement $statement, $callback = null)
     {
@@ -176,6 +178,7 @@ class BaseDAO
             }
         }
 
+        return 0;
     }
     protected function execute(PDOStatement $statement, $callback = null)
     {
@@ -187,6 +190,7 @@ class BaseDAO
                 $callback($ex);
             }
         }
+        return false;
     }
     protected function executeAndCount(PDOStatement $statement, $callback = null)
     {
@@ -198,6 +202,7 @@ class BaseDAO
                 $callback($ex);
             }
         }
+        return 0;
     }
     protected function bind(PDOStatement $statement, $entity): void 
     {

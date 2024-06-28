@@ -1,57 +1,58 @@
 <?php
 
-namespace App\Controllers;
+    namespace App\Controllers;
 
 use App\Lib\Flash;
 use App\Services\UserService;
+use App\Validators\SigningValidator;
 use Core\Controllers\BaseController;
-use Core\Http\CSRF;
 use Core\Http\Request;
-use Exception;
 
 class SigningUpController extends BaseController
 {
     private UserService $service;
+    private SigningValidator $validator;
 
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->service = new UserService();
-    }
-    public function validateInputs($email, $password, $password2, $name)
-    {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) == $email
-        && preg_match('/^[A-Za-z0-9@#$%]{8,33}$/', $password)
-        && preg_match('/^[a-zA-Z0-9]{5,100}$/', $name)
-        && $password == $password2
-        && strlen($email) <= 50;
+        $this->validator = new SigningValidator($this->params);
     }
     public function post()
     {
-        $created = false;
-        $email = $this->params['email'] ?? '';
-        $password = $this->params['password'] ?? '';
-        $password2 = $this->params['password2'] ?? '';
-        $name = $this->params['name'] ?? '';
-        if ($this->validateInputs($email, $password, $password2, $name)) {
-            $created = $this->service->signingUp($email, $password, $name);
-            if ($created) {
-                Flash::message('success_message', 'user successfully registered');
-                echo 'sdsadsfd';
-                $this->redirectTo('/login');
-            } else {
-                http_response_code(401);
-                Flash::message('error_message', "email already exists");
-                $this->render('signingUp', [
-                    'email' => $email,
-                    'password' => $password,
-                    'password2' => $password2,
-                    'name' => $name
+        $obj = $this;
+        $isValid = $this->validator->validateInputs(
+            function() use ($obj)
+            {
+                http_response_code(422);
+                Flash::message('error_message', "invalid credentials");
+                $obj->render('signingUp', [
+                    'email' => $obj->params['email'],
+                    'password' => $obj->params['password'],
+                    'password2' => $obj->params['password2'],
+                    'name' => $obj->params['name']
                 ]);
+
             }
+        );
+        if (!$isValid) {
+            $this->signingUp();
+        }
+    }
+    private function signingUp()
+    {
+        $email = $this->params['email'];
+        $password = $this->params['password'];
+        $password2 = $this->params['password2'];
+        $name = $this->params['name'];
+        $created = $this->service->signingUp($email, $password, $name);
+        if ($created) {
+            Flash::message('success_message', 'user successfully registered');
+            $this->redirectTo('/login');
         } else {
-            http_response_code(422);
-            Flash::message('error_message', "invalid credentials");
+            http_response_code(401);
+            Flash::message('error_message', "email already exists");
             $this->render('signingUp', [
                 'email' => $email,
                 'password' => $password,
@@ -59,6 +60,7 @@ class SigningUpController extends BaseController
                 'name' => $name
             ]);
         }
+
     }
     public function index()
     {

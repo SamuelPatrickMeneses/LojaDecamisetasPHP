@@ -21,9 +21,9 @@ class AddressController extends BaseController
     public function post()
     {
         $isValid = $this->valid->isValidAddress(
-            function ($message)
+            function ($error)
             {
-                Flash::message('error_message', $message);
+                Flash::message('error_message', $error['message']);
                 $this->render($_SESSION['lest_page'], [
                     'postalCode' => $this->params['postalCode'] ?? '',
                     'street' => $this->params['street'] ?? '',

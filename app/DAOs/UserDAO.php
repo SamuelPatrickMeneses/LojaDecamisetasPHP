@@ -17,9 +17,9 @@ class UserDAO extends BaseDAO
 
     public function findUserByEmail(string $email): User
     {
-        $user = $this->findByField('email', $email)[0];
-        if (isset($user)) {
-            return $user;
+        $users = $this->findByField('email', $email);
+        if (isset($users[0])) {
+            return $users[0];
         }
         throw new UserNotExistisException();
     }

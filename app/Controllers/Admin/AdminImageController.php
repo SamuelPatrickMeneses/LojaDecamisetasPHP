@@ -4,25 +4,23 @@ namespace App\Controllers\Admin;
 
 use App\Lib\Flash;
 use App\Services\ImageService;
+use App\Validators\AdminImageValidator;
 use Core\Controllers\BaseController;
 
 class AdminImageController extends BaseController
 {
     private $service;
-
+    private AdminImageValidator $validator;
     public function __construct($request)
     {
 
         parent::__construct($request);
         $this->service = new ImageService();
-    }
-    public function isValidId()
-    {
-        return isset($this->params[':id']) && intval($this->params[':id']) > 0;
+        $this->validator = new AdminImageValidator($this->params);
     }
     public function delete()
     {
-        if ($this->isValidId()) {
+        if ($this->validator->isValidId()) {
             $this->service->deleteById(intval($this->params[':id']));
             Flash::message('success_message', "deleted with success!");
         } else {

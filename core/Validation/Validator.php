@@ -23,7 +23,7 @@ class Validator
     public function validateFields($filds, $callback = null)
     {
         foreach ($this->validators as $prop => $validator) {
-            if ( isset($filds[$prop]) ) {
+            if ( in_array($prop, $filds) ) {
                 $result = $validator->valid(
                     $this->params[$prop],
                     $callback ?? $this->callback

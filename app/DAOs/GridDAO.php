@@ -52,7 +52,7 @@ class GridDAO extends BaseDAO
     {
         $label = ($size ?? '%') . '/' . ($color ?? '%') . '/' . ($gender ?? '%');
         $comand = QueryBuilder::find($this->orm)->
-           byFieldLike('label') . 'SELECT * FROM grids WHERE grid_label like :label';
+           byFieldLike('label');
         $statement = $this->pdo->prepare($comand);
         $statement->bindParam(':label', $label);
         return $this->fetch($statement);

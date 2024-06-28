@@ -15,6 +15,9 @@ class FieldValidator
     private $callback = 'nop';
     private string $name;
     private array $set;
+    private array $filters = [];
+    private array $checkAll = [];
+    private $errors = [];
     public const ACCEPTED_TYPES = [
         'string' => [
             'cast' => 'strval',
@@ -38,7 +41,7 @@ class FieldValidator
         $vars = get_class_vars(self::class);
         $vars = array_keys($vars);
         foreach ($vars as $var) {
-            if (isset($props[$var])) {
+            if (isset($props[$var]) && $var !== 'errors') {
                 $this->$var = $props[$var];
             }
         }
@@ -46,46 +49,59 @@ class FieldValidator
             throw new Exception("filsd type unaccepted in $this->name!");
         }
     }
-    public function valid($val, $callback)
+    public function valid(&$val, $callback)
     {
         $error = $callback ?? $this->callback; 
         if ($this->required && !isset($val)) {
-           return $error("the field $this->name is required"); 
+            $this->addError("the field $this->name is required");
+        }
+        foreach ($this->filters as $filter) {
+            if (!filter_var($val, $filter)) {
+                $this->addError("the field $this->name don't pass on the filter " . getFilterName($filter) . '!' );
+            }
+        }
+        foreach ($this->checkAll as $check) {
+            if (!$check($val)) {
+                $this->addError("The field $this->name value is invalid!");            
+            }
         }
         $type = $this->type;
         $typeValidator =  self::ACCEPTED_TYPES[$type];
         if (!$typeValidator['is']($val)){
-            return $error("The field $this->name should be type $type!");
+            $this->addError("The field $this->name should be type $type!");
         } 
         $val = $typeValidator['cast']($val);
         if (isset($this->set) && !in_array($val, $this->set)) {
-            return $error("The field $this->name value is invalid!");
+            $this->addError("The field $this->name value is invalid!");
         } 
         $valid = $typeValidator['valid']; 
-        return $this->$valid($val, $error);
+        $this->$valid($val);
+        return count($this->errors) > 0
+            ? $error($this->errors)
+            : true;
     }
-    private function validString($val, $callback)
+    private function validString($val)
     {
         if (strlen($val) < $this->min) {
-            $callback("The field $this->name must have at least $this->min characters!");
+            $this->addError("The field $this->name must have at least $this->min characters!");
         } elseif (strlen($val) > $this->max) {
-            $callback("The field $this->name must have a maximun of $this->max characters!");
+            $this->addError("The field $this->name must have a maximun of $this->max characters!");
         } elseif (isset($this->regx) && !preg_match($this->regx, $val)) {
-            $callback("The field $this->name is out of pattern!");
-        } else {
-            return true;
+            $this->addError("The field $this->name is out of pattern!");
         }
-        return false;
     }
-    private function validNumber($val, $callback)
+    private function validNumber($val)
     {
         if ($val < $this->min) {
-            $callback("The field $this->name must be at least $this->min!");
+            $this->addError("The field $this->name must be at least $this->min!");
         } elseif ($val > $this->max) {
-            $callback("The field $this->name must be at most $this->max!");
-        } else {
-            return true;
+            $this->addError("The field $this->name must be at most $this->max!");
         }
-        return false;
+    }
+    private function addError($message)
+    {
+        $this->errors[] = [
+            'message' => $message
+        ];
     }
 }

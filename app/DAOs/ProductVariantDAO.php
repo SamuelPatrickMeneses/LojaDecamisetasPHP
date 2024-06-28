@@ -18,7 +18,13 @@ class ProductVariantDAO extends BaseDAO
     }
     public function populateProduct(Product $product, $pageZise = 0, $pageNumber = 1)
     {
-        $comand = 'SELECT grid_id, price, variant_id, product_id, stock_quantity, grid_label, variant_status
+        $comand = 'SELECT
+            price AS price,
+            variant_id AS id,
+            product_id AS product,
+            stock_quantity AS stockQuantity,
+            grid_label AS grid,
+            variant_status AS status
         FROM product_variants JOIN grids using(grid_id) WHERE product_id = :id ';
         $comand .= DAOUtil::buildPagination($pageZise, $pageNumber);
         $statement = $this->pdo->prepare($comand);
@@ -45,8 +51,14 @@ class ProductVariantDAO extends BaseDAO
     }
     public function populateCartItem(CartItem $item)
     {
-        $comand = 'SELECT grid_id, price, variant_id, product_id, stock_quantity, grid_label, variant_status
-        FROM product_variants JOIN grids using(grid_id) WHERE variant_id = :id ';
+        $comand = 'SELECT
+            price AS price,
+            variant_id AS id,
+            product_id AS product,
+            stock_quantity AS stockQuantity,
+            grid_label AS grid,
+            variant_status AS status
+            FROM product_variants JOIN grids using(grid_id) WHERE variant_id = :id ';
         $statement = $this->pdo->prepare($comand);
         $statement->bindValue(':id', $item->getVariant());
         $statement->execute();

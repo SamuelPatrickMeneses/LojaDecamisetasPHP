@@ -2,11 +2,11 @@
 
 namespace App\Controllers\Admin;
 
-use App\Entity\Grid;
 use App\Entity\Image;
 use App\Lib\Flash;
 use App\Services\ImageService;
 use App\Services\ProductVariantService;
+use App\Validators\AdminProductVariantValidator;
 use Core\Controllers\BaseController;
 use Core\Http\Request;
 
@@ -14,71 +14,20 @@ class AdminProductVariantController extends BaseController
 {
     private ProductVariantService $service;
     private ImageService $imageService;
-
+    private AdminProductVariantValidator $validator;
     public function __construct(Request $request)
     {
         parent::__construct($request);
         $this->service = new ProductVariantService();
         $this->imageService = new ImageService();
-    }
-    public function isValidId()
-    {
-        return isset($this->params[':variantId']) && intval($this->params[':variantId']) > 0;
-    }
-    public function isValidProductId()
-    {
-        return isset($this->params['productId']) && intval($this->params['productId']) > 0;
-    }
-    public function isValidGrid()
-    {
-        return isset($this->params['size'])
-        && isset($this->params['color'])
-        && isset($this->params['gender'])
-        && in_array($this->params['color'], $_SESSION['colorList'])
-        && in_array($this->params['size'], Grid::ACEPTED_SIZES)
-        && in_array($this->params['gender'], Grid::ACEPTED_GENDERS);
-    }
-    public function isValidCreateProductVariant()
-    {
-        return isset($this->params['quantity'])
-        && isset($this->params['price'])
-        && intval($this->params['price']) > 0 && intval($this->params['quantity']) <= 10000
-        && intval($this->params['quantity']) >= 0
-        && $this->isValidGrid()
-        && $this->isValidProductId();
-    }
-    public function isValidEditProductVariant()
-    {
-        return $this->isValidProductId()
-        && isset($this->params['quantity'])
-        && isset($this->params['price'])
-        && intval($this->params['price']) > 0 && intval($this->params['quantity']) <= 10000
-        && intval($this->params['quantity']) >= 0
-        && $this->isValidGrid()
-        && $this->isValidId();
-    }
-    public function hasImage()
-    {
-        if (isset($_FILES['image'])) {
-            if (!preg_match('/^.*\.(jpeg|jpg|png)$/', $_FILES['image']['name'])) {
-                return false;
-            }
-            if (strlen($_FILES['image']['name']) > 250) {
-                return false;
-            }
-            if (intval($_FILES['image']['size']) > Image::MAX_ACEPTED_SIZE) {
-                Flash::message('error_message', 'invalid image type');
-                return false;
-            }
-            return true;
-        }
-        return false;
+        $this->validator = new AdminProductVariantValidator($this->params);
     }
     public function post()
     {
-        if ($this->isValidCreateProductVariant()) {
+        if ($this->validator->isValidCreateProductVariant()) {
             $quantity = intval($this->params['quantity']);
-            $price = intval($this->params['price']) * 100;
+            $price = floatval($this->params['price']) * 100;
+            $price = intval($price);
             $color = $this->params['color'];
             $size = $this->params['size'];
             $gender = $this->params['gender'];
@@ -86,7 +35,10 @@ class AdminProductVariantController extends BaseController
             $result = $this->service->createProductVariant($productId, $quantity, $price, $size, $color, $gender);
             if ($result) {
                 Flash::message('success_message', "create with success!");
-                if ($this->hasImage()) {
+                $hasImage = $this->validator->hasImage(
+                    fn($error) => Flash::message($error['message'])
+                );
+                if ($hasImage) {
                     $this->imageService->createImage(
                         $_FILES['image']['name'],
                         $_FILES['image']['tmp_name'],
@@ -106,7 +58,7 @@ class AdminProductVariantController extends BaseController
     }
     public function edit()
     {
-        if ($this->isValidEditProductVariant()) {
+        if ($this->validator->isValidEditProductVariant()) {
             $quantity = intval($this->params['quantity']);
             $price = intval($this->params['price']) * 100;
             $color = $this->params['color'];
@@ -117,7 +69,10 @@ class AdminProductVariantController extends BaseController
             $result = $this->service->updateProductVariant($variantId, $quantity, $price, $size, $color, $gender);
             if ($result) {
                 Flash::message('success_message', "modified with success!");
-                if ($this->hasImage()) {
+                $hasImage = $this->validator->hasImage(
+                    fn($error) => Flash::message($error['message'])
+                );
+                if ($hasImage) {
                     $this->imageService->createImage(
                         $_FILES['image']['name'],
                         $_FILES['image']['tmp_name'],
@@ -139,7 +94,7 @@ class AdminProductVariantController extends BaseController
     {
         $colorList = $this->service->getColorList();
         $_SESSION['colorList'] = $colorList;
-        if ($this->isValidId()) {
+        if ($this->validator->isValidId()) {
                 $variantId = intval($this->params[':variantId']);
                 $productVariant = $this->service->getByIdWithImages($variantId);
             if (isset($productVariant)) {
@@ -156,7 +111,7 @@ class AdminProductVariantController extends BaseController
                 Flash::message('error_message', "unexistent product");
                 $this->redirectTo('/admin/products');
             }
-        } elseif ($this->isValidProductId()) {
+        } elseif ($this->validator->isValidProductId()) {
             $this->render('admin/createProductVariant', [
                 'colors' => $colorList,
                 'productId' => intval($this->params['productId'])
